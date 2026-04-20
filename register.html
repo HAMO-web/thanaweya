@@ -590,31 +590,57 @@ function handlePhoto(input){
   reader.readAsDataURL(file);
 }
 async function startGuestFlow() {
-  try {
-    const btn = event.target;
-    const oldTxt = btn.textContent;
-    btn.disabled = true; 
-    btn.innerHTML = '<span class="btn-loader"></span>جاري الدخول...';
+    // 1. تشيك لو الجهاز ده جرب قبل كدة وخلص مدته
+    if (localStorage.getItem('guest_expired')) {
+        showToast("عفواً، لقد استنفدت مدة التجربة (24 ساعة) من هذا الجهاز.");
+        return;
+    }
+
+    // 2. طلب الاسم (اختياري)
+    let guestName = prompt("أهلاً بك في وضع الزائر! (اختياري) اكتب اسمك الثلاثي:");
     
-    // تسجيل دخول مجهول في فايربيز
-    const res = await auth.signInAnonymously();
-    currentUser = res.user;
-    
-    // تخزين علامة إن ده ضيف
-    localStorage.setItem('isGuest', 'true');
-    
-    // الانتقال لقسم التسجيل
-    switchTab('register'); 
-    
-    // الانتقال فوراً للخطوة رقم 2 (تخطي خطوة اليوزر والباسورد)
-    goRegTo(2); 
-    
-  } catch (e) {
-    console.error(e);
-    alert("حدث خطأ في تفعيل وضع الزائر. تأكد من تفعيل Anonymous في Firebase Console");
-    btn.disabled = false; 
-    btn.textContent = "تجربة الموقع كزائر ⚡";
-  }
+    // لو ساب الخانة فاضية أو داس Cancel، هنسميه "زائر جديد"
+    if (!guestName || guestName.trim() === "") {
+        guestName = "زائر جديد";
+    }
+
+    try {
+        const btn = event.target;
+        btn.disabled = true; 
+        btn.innerHTML = '<span class="btn-loader"></span>جاري الدخول...';
+        
+        // 3. دخول مجهول في فايربيز
+        const res = await auth.signInAnonymously();
+        const uid = res.user.uid;
+
+        // 4. حفظ بياناته في Firestore
+        const entryTime = Date.now();
+        await db.collection('users').doc(uid).set({
+            uid: uid,
+            name: guestName.trim(),
+            isGuest: true,
+            entryTime: entryTime,
+            level: "زائر",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // 5. حفظ بيانات الوقت في المتصفح عشان الطرد التلقائي
+        localStorage.setItem('isGuest', 'true');
+        localStorage.setItem('guestEntryTime', entryTime);
+
+        showToast("تم الدخول كزائر.. متاح لك 24 ساعة تجربة ⚡");
+        
+        // تحويل للصفحة الرئيسية بعد ثانية ونصف
+        setTimeout(() => {
+            location.href = 'index.html';
+        }, 1500);
+
+    } catch (e) {
+        console.error(e);
+        showToast("حدث خطأ، تأكد من اتصال الإنترنت");
+        event.target.disabled = false;
+        event.target.textContent = "تجربة الموقع كزائر ⚡";
+    }
 }
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 function showErr(id,msg){const el=document.getElementById(id);if(!el)return;if(msg)el.textContent=msg;el.classList.add('show');}
