@@ -220,7 +220,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <button class="primary-btn" id="s1-btn" onclick="goS2()">التالي ←</button>
       <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--text3)">عندك حساب؟ <span style="color:var(--blue2);cursor:pointer" onclick="switchTab('login')">سجل دخولك</span></div>
     </div>
-
+ <button class="primary-btn" onclick="startGuestFlow()" style="background:var(--bg3); border:1px solid var(--text4); color:var(--text2); margin-top:10px;">
+   تجربة الموقع كزائر (بدون خطوات) ⚡
+</button>
     <!-- Step 2: Personal info -->
     <div class="step-content" id="reg-s2">
       <div class="step-title">بياناتك الشخصية 👤</div>
@@ -590,56 +592,48 @@ function handlePhoto(input){
   reader.readAsDataURL(file);
 }
 async function startGuestFlow() {
-    // 1. تشيك لو الجهاز ده جرب قبل كدة وخلص مدته
     if (localStorage.getItem('guest_expired')) {
-        showToast("عفواً، لقد استنفدت مدة التجربة (24 ساعة) من هذا الجهاز.");
+        showToast("عفواً، لقد استنفدت مدة التجربة.");
         return;
     }
 
-    // 2. طلب الاسم (اختياري)
-    let guestName = prompt("أهلاً بك في وضع الزائر! (اختياري) اكتب اسمك الثلاثي:");
-    
-    // لو ساب الخانة فاضية أو داس Cancel، هنسميه "زائر جديد"
+    let guestName = prompt("أهلاً بك! (اختياري) اكتب اسمك الثلاثي:");
     if (!guestName || guestName.trim() === "") {
         guestName = "زائر جديد";
     }
 
     try {
         const btn = event.target;
-        btn.disabled = true; 
-        btn.innerHTML = '<span class="btn-loader"></span>جاري الدخول...';
+        btn.disabled = true; btn.innerHTML = 'جاري التحميل...';
         
-        // 3. دخول مجهول في فايربيز
         const res = await auth.signInAnonymously();
         const uid = res.user.uid;
-
-        // 4. حفظ بياناته في Firestore
         const entryTime = Date.now();
+        
+        // بنملأ البيانات هنا "وهمي" عشان index.html ميرجعناش لصفحة التسجيل تاني
         await db.collection('users').doc(uid).set({
             uid: uid,
             name: guestName.trim(),
             isGuest: true,
             entryTime: entryTime,
-            level: "زائر",
+            level: "زائر", 
+            city: "غير محدد",
+            phone: "00000000000",
+            points: 0,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        // 5. حفظ بيانات الوقت في المتصفح عشان الطرد التلقائي
         localStorage.setItem('isGuest', 'true');
         localStorage.setItem('guestEntryTime', entryTime);
 
-        showToast("تم الدخول كزائر.. متاح لك 24 ساعة تجربة ⚡");
-        
-        // تحويل للصفحة الرئيسية بعد ثانية ونصف
-        setTimeout(() => {
-            location.href = 'index.html';
-        }, 1500);
+        showToast("تم الدخول.. استمتع بـ 24 ساعة تجربة ⚡");
+        setTimeout(() => { location.href = 'index.html'; }, 1000);
 
     } catch (e) {
         console.error(e);
-        showToast("حدث خطأ، تأكد من اتصال الإنترنت");
-        event.target.disabled = false;
-        event.target.textContent = "تجربة الموقع كزائر ⚡";
+        showToast("حدث خطأ، حاول مرة أخرى");
+        btn.disabled = false;
+        btn.textContent = "تجربة الموقع كزائر ⚡";
     }
 }
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
