@@ -502,7 +502,7 @@ function sendMsg(){
   const input=document.getElementById('msg-input');
   const txt=input.value.trim();
   if(!txt)return;
-  if(!currentUser){showToast('سجل دخولك أولاً');return;}
+  if(!currentUser){showToast(' سجل دخولك أولاً من الصفحة الرءيسية');return;}
   const now=new Date();
   const timeStr=now.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
   const isAdmin=currentUser.email===ADMIN_EMAIL;
@@ -545,18 +545,36 @@ function openChat(id){
   const isGroup=id==='group';
   document.getElementById('chat-list-view').style.display='none';
   document.getElementById('chat-room-view').style.display='flex';
+
   if(isGroup){
     document.getElementById('rh-name').textContent='جروب لمة الثانوية';
-    document.getElementById('rh-sub').textContent='1,240 عضو';
     document.getElementById('rh-avatar').textContent='💬';
     document.getElementById('rh-stats').style.display='flex';
     document.getElementById('pinned-msg').style.display='flex';
+
+    // --- السطور الجديدة عشان تجيب العدد الحقيقي ---
+    // 1. عدد كل الأعضاء
+    db.collection('users').get().then(snap => {
+       document.getElementById('rh-sub').textContent = snap.size + ' عضو';
+    });
+
+    // 2. عدد المتصلين (لو عندك عنصر الـ Stats)
+    db.collection('users').where('status', '==', 'online').onSnapshot(snap => {
+       // لو عندك سبان مخصص للمتصلين زي ما عدلنا قبل كدة
+       const onlineEl = document.getElementById('online-count');
+       if(onlineEl) onlineEl.textContent = snap.size;
+    });
+    // -------------------------------------------
+
   } else {
     document.getElementById('rh-name').textContent=id;
     document.getElementById('rh-sub').textContent='محادثة خاصة';
     document.getElementById('rh-avatar').textContent='👤';
     document.getElementById('rh-stats').style.display='none';
     document.getElementById('pinned-msg').style.display='none';
+  }
+  // ... باقي الكود بتاعك
+}
   }
   renderDemoMsgs();
   if(db&&currentUser){
@@ -658,12 +676,6 @@ window.addEventListener('load',()=>{
   }
   renderPrivateChats();
 });
-
-function renderPrivateChats(){
-  const demos=[
-    {name:'أحمد علي',last:'تمام ياصديقي',time:'أمس',color:'#0f766e',unread:0},
-    {name:'سارة محمد',last:'شكراً 😊',time:'أمس',color:'#b45309',unread:2},
-  ];
   const container=document.getElementById('private-chats');
   container.innerHTML=demos.map(u=>`
     <div class="chat-item" onclick="openChat('${u.name}')">
