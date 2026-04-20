@@ -264,14 +264,70 @@ function fillDates(){
   for(let i=cur-13;i>=cur-24;i--){const o=document.createElement('option');o.value=i;o.textContent=i;y.appendChild(o);}
 }
 
-async function checkProfile(u){
-  if(!db)return;
-  const doc=await db.collection('users').doc(u.uid).get();
-  if(doc.exists&&doc.data().fullName&&doc.data().platformNum){location.href='index.html';return;}
-  switchTab('register');
-  goRegTo(2);
+// استبدل الجزء ده (دالة checkProfile ودالة startGuestFlow) في كودك
+
+async function checkProfile(u) {
+  if (!db) return;
+  try {
+    const doc = await db.collection('users').doc(u.uid).get();
+    if (doc.exists) {
+      const data = doc.data();
+      // لو هو ضيف أو مكمل بياناته (الاسم ورقم المنصة)، يدخل فوراً
+      if (data.isGuest === true || (data.fullName && data.platformNum)) {
+        location.href = 'index.html';
+        return;
+      }
+    }
+    // لو مش ضيف وبياناته ناقصة، يفتح صفحة التسجيل
+    switchTab('register');
+    goRegTo(1);
+  } catch (e) {
+    console.error("Profile Check Error:", e);
+  }
 }
 
+async function startGuestFlow() {
+    if (localStorage.getItem('guest_expired')) {
+        showToast("عفواً، لقد استنفدت مدة التجربة من هذا الجهاز.");
+        return;
+    }
+
+    let guestName = prompt("أهلاً بك! (اختياري) اكتب اسمك الثلاثي:");
+    if (!guestName || guestName.trim() === "") guestName = "زائر جديد";
+
+    try {
+        const btn = event.target;
+        btn.disabled = true; btn.innerHTML = '<span class="btn-loader"></span>جاري التحميل...';
+        
+        const res = await auth.signInAnonymously();
+        const uid = res.user.uid;
+        const entryTime = Date.now();
+        
+        // بنبعت البيانات دي لفايربيز
+        await db.collection('users').doc(uid).set({
+            uid: uid,
+            fullName: guestName.trim(), 
+            platformNum: "01900000000", 
+            isGuest: true,
+            entryTime: entryTime,
+            grade: "زائر", 
+            city: "غير محدد",
+            registeredAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // أهم خطوة: بنعرف المتصفح إنه ضيف عشان checkProfile تعديه
+        localStorage.setItem('isGuest', 'true');
+        localStorage.setItem('guestEntryTime', entryTime);
+
+        showToast("تم الدخول.. استمتع بـ 24 ساعة تجربة ⚡");
+        
+        // تحويل نهائي
+        setTimeout(() => { location.href = 'index.html'; }, 1000);
+    } catch (e) {
+        showToast("حدث خطأ في تفعيل وضع الزائر");
+        btn.disabled = false; btn.textContent = "تجربة الموقع كزائر ⚡";
+    }
+}
 function switchTab(t){
   document.getElementById('tab-login').classList.toggle('active',t==='login');
   document.getElementById('tab-register').classList.toggle('active',t==='register');
