@@ -682,6 +682,62 @@ function renderPrivateChats(){
     </div>
   `).join('');
 }
-</script>
+</script>// تصحيح دالة الإرسال عشان تبعت للسيرفر صح
+sendMsg = function() {
+    const input = document.getElementById('msg-input');
+    const txt = input.value.trim();
+    if (!txt || !currentUser || !db) return;
+
+    const isAdmin = currentUser.email === ADMIN_EMAIL;
+    const chatId = currentChat === 'group' ? 'group' : `private_${[currentUser.uid, 'other'].sort().join('_')}`;
+
+    db.collection('chats').doc(chatId).collection('messages').add({
+        uid: currentUser.uid,
+        name: currentUserData?.fullName || currentUser.displayName || 'مستخدم',
+        nickname: currentUserData?.nickname || '',
+        grade: currentUserData ? `${currentUserData.gradeLabel} ${currentUserData.branch}` : '',
+        text: txt,
+        time: firebase.firestore.FieldValue.serverTimestamp(), // أهم سطر للثبات
+        replyTo: replyTo || null,
+        isAdmin: isAdmin,
+        photoURL: currentUser.photoURL || null,
+    }).then(() => {
+        input.value = '';
+        cancelReply();
+    }).catch(err => showToast("خطأ في السيرفر"));
+};
+
+// تصحيح دالة الاستقبال عشان تعرض الرسايل الحقيقية وتثبتها
+openChat = function(id) {
+    currentChat = id;
+    document.getElementById('chat-list-view').style.display = 'none';
+    document.getElementById('chat-room-view').style.display = 'flex';
+    const area = document.getElementById('messages-area');
+    
+    // تنظيف الشات من الرسايل التجريبية
+    area.innerHTML = '<div class="date-divider">جاري جلب الرسايل...</div>';
+
+    const chatId = id === 'group' ? 'group' : `private_${[currentUser.uid, id].sort().join('_')}`;
+    
+    db.collection('chats').doc(chatId).collection('messages')
+        .orderBy('time', 'asc')
+        .onSnapshot(snap => {
+            area.innerHTML = '<div class="date-divider">اليوم</div>';
+            snap.forEach(doc => {
+                const data = doc.data();
+                // تحويل وقت السيرفر لوقت حقيقي
+                let timeStr = "الآن";
+                if(data.time) {
+                    timeStr = data.time.toDate().toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'});
+                }
+                const m = { id: doc.id, ...data, time: timeStr };
+                const isMe = currentUser && m.uid === currentUser.uid;
+                const div = document.createElement('div');
+                div.innerHTML = renderMsg(m, isMe);
+                area.appendChild(div.firstElementChild);
+            });
+            area.scrollTop = area.scrollHeight;
+        });
+};
 </body>
 </html>
