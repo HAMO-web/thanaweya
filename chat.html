@@ -660,74 +660,43 @@ window.addEventListener('load',()=>{
   renderPrivateChats();
 });
 
-function renderPrivateChats(){
-  const demos=[
-    {name:'أحمد علي',last:'تمام ياصديقي',time:'أمس',color:'#0f766e',unread:0},
-    {name:'سارة محمد',last:'شكراً 😊',time:'أمس',color:'#b45309',unread:2},
-  ];
-  const container=document.getElementById('private-chats');
-  container.innerHTML=demos.map(u=>`
-    <div class="chat-item" onclick="openChat('${u.name}')">
-      <div class="ci-avatar" style="background:${u.color}">${u.name.charAt(0)}</div>
-      <div class="ci-info">
-        <div class="ci-name-row">
-          <div class="ci-name">${u.name}</div>
-          <div class="ci-time">${u.time}</div>
-        </div>
-        <div class="ci-last-row">
-          <div class="ci-last">${u.last}</div>
-          ${u.unread?`<div class="ci-badge">${u.unread}</div>`:''}
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-</script>// تصحيح دالة الإرسال عشان تبعت للسيرفر صح
-sendMsg = function() {
-    const input = document.getElementById('msg-input');
-    const txt = input.value.trim();
-    if (!txt || !currentUser || !db) return;
+// 1. دالة عرض الجروب فقط عند التحميل
+window.addEventListener('load', () => {
+    if (auth) {
+        auth.onAuthStateChanged(async user => {
+            currentUser = user;
+            if (user && db) {
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (doc.exists) currentUserData = doc.data();
+                } catch (e) {}
+            }
+        });
+    }
+    // شيلنا استدعاء renderPrivateChats من هنا
+});
 
-    const isAdmin = currentUser.email === ADMIN_EMAIL;
-    const chatId = currentChat === 'group' ? 'group' : `private_${[currentUser.uid, 'other'].sort().join('_')}`;
-
-    db.collection('chats').doc(chatId).collection('messages').add({
-        uid: currentUser.uid,
-        name: currentUserData?.fullName || currentUser.displayName || 'مستخدم',
-        nickname: currentUserData?.nickname || '',
-        grade: currentUserData ? `${currentUserData.gradeLabel} ${currentUserData.branch}` : '',
-        text: txt,
-        time: firebase.firestore.FieldValue.serverTimestamp(), // أهم سطر للثبات
-        replyTo: replyTo || null,
-        isAdmin: isAdmin,
-        photoURL: currentUser.photoURL || null,
-    }).then(() => {
-        input.value = '';
-        cancelReply();
-    }).catch(err => showToast("خطأ في السيرفر"));
-};
-
-// تصحيح دالة الاستقبال عشان تعرض الرسايل الحقيقية وتثبتها
-openChat = function(id) {
-    currentChat = id;
+// 2. تحديث دالة فتح الشات (تم تبسيطها للجروب فقط)
+window.openChat = function(id) {
+    currentChat = 'group'; // إجبار المتصفح على الجروب دائماً
     document.getElementById('chat-list-view').style.display = 'none';
     document.getElementById('chat-room-view').style.display = 'flex';
+    
     const area = document.getElementById('messages-area');
-    
-    // تنظيف الشات من الرسايل التجريبية
-    area.innerHTML = '<div class="date-divider">جاري جلب الرسايل...</div>';
+    area.innerHTML = '<div class="date-divider">جاري تحميل رسائل الجروب...</div>';
 
-    const chatId = id === 'group' ? 'group' : `private_${[currentUser.uid, id].sort().join('_')}`;
-    
-    db.collection('chats').doc(chatId).collection('messages')
+    // المراقبة الحية لجروب لمة الثانوية فقط
+    db.collection('chats').doc('group').collection('messages')
         .orderBy('time', 'asc')
         .onSnapshot(snap => {
             area.innerHTML = '<div class="date-divider">اليوم</div>';
+            if(snap.empty) {
+                area.innerHTML += '<div style="text-align:center;color:var(--text4);margin-top:20px;">لا توجد رسائل بعد..</div>';
+            }
             snap.forEach(doc => {
                 const data = doc.data();
-                // تحويل وقت السيرفر لوقت حقيقي
                 let timeStr = "الآن";
-                if(data.time) {
+                if(data.time && data.time.toDate) {
                     timeStr = data.time.toDate().toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'});
                 }
                 const m = { id: doc.id, ...data, time: timeStr };
@@ -739,5 +708,32 @@ openChat = function(id) {
             area.scrollTop = area.scrollHeight;
         });
 };
+
+// 3. تحديث دالة الإرسال (للجروب فقط)
+window.sendMsg = function() {
+    const input = document.getElementById('msg-input');
+    const txt = input.value.trim();
+    if (!txt || !currentUser || !db) {
+        if(!currentUser) showToast("سجل دخولك أولاً");
+        return;
+    }
+
+    db.collection('chats').doc('group').collection('messages').add({
+        uid: currentUser.uid,
+        name: currentUserData?.fullName || currentUser.displayName || 'مستخدم',
+        nickname: currentUserData?.nickname || '',
+        grade: currentUserData ? `${currentUserData.gradeLabel} ${currentUserData.branch}` : '',
+        text: txt,
+        time: firebase.firestore.FieldValue.serverTimestamp(),
+        replyTo: replyTo || null,
+        isAdmin: currentUser.email === "alawadi7760@gmail.com",
+        photoURL: currentUser.photoURL || null
+    }).then(() => {
+        input.value = '';
+        input.style.height = 'auto';
+        cancelReply();
+    }).catch(err => { showToast("فشل في الإرسال"); });
+};
+</script>
 </body>
 </html>
