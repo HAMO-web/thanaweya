@@ -539,111 +539,59 @@ function sendMsg(){
     }).catch(()=>{});
   }
 }
-function openChat(id) {
-    currentChat = id;
-    const isGroup = id === 'group';
+window.openChat = function(id) {
+    // 1. تحديد إننا في الجروب دايماً
+    currentChat = 'group';
     
-    // إظهار وإخفاء الشاشات
-    document.getElementById('chat-list-view').style.display = 'none';
-    document.getElementById('chat-room-view').style.display = 'flex';
+    // 2. إظهار شاشة الشات وإخفاء القائمة
+    const listView = document.getElementById('chat-list-view');
+    const roomView = document.getElementById('chat-room-view');
+    if (listView) listView.style.display = 'none';
+    if (roomView) roomView.style.display = 'flex';
 
+    // 3. تجهيز منطقة الرسائل
     const area = document.getElementById('messages-area');
-    area.innerHTML = '<div class="date-divider">جاري تحميل الرسائل...</div>';
+    if (area) area.innerHTML = '<div class="date-divider">جاري تحميل الجروب...</div>';
 
-    if (isGroup) {
-        document.getElementById('rh-name').textContent = 'جروب لمة الثانوية';
-        document.getElementById('rh-avatar').textContent = '💬';
-        document.getElementById('rh-stats').style.display = 'flex';
-        document.getElementById('pinned-msg').style.display = 'flex';
+    // 4. تحديث بيانات الهيدر (العدد الحقيقي)
+    document.getElementById('rh-name').textContent = 'جروب لمة الثانوية';
+    document.getElementById('rh-avatar').textContent = '💬';
 
-        // 1. جلب العدد الحقيقي للأعضاء
-        db.collection('users').get().then(snap => {
-            document.getElementById('rh-sub').textContent = snap.size + ' عضو';
-        });
+    // جلب عدد الأعضاء الكلي
+    db.collection('users').get().then(snap => {
+        document.getElementById('rh-sub').textContent = snap.size + ' عضو';
+    }).catch(e => console.log("Error count:", e));
 
-        // 2. جلب عدد المتصلين (Online)
-        db.collection('users').where('status', '==', 'online').onSnapshot(snap => {
-            const onlineEl = document.getElementById('online-count');
-            if (onlineEl) onlineEl.textContent = snap.size;
-        });
-    } else {
-        document.getElementById('rh-name').textContent = id;
-        document.getElementById('rh-sub').textContent = 'محادثة خاصة';
-        document.getElementById('rh-avatar').textContent = '👤';
-        document.getElementById('rh-stats').style.display = 'none';
-        document.getElementById('pinned-msg').style.display = 'none';
-    }
-
-    // جلب الرسائل من الداتا بيز
+    // 5. فتح اتصال حقيقي مع الرسائل
     if (db && currentUser) {
-        const chatId = isGroup ? 'group' : `private_${[currentUser.uid, id].sort().join('_')}`;
-        
-        db.collection('chats').doc(chatId).collection('messages')
+        db.collection('chats').doc('group').collection('messages')
             .orderBy('time', 'asc')
-            .limit(50)
+            .limit(100)
             .onSnapshot(snap => {
-                area.innerHTML = `<div class="date-divider">اليوم</div>`;
-                if (snap.empty) {
-                    area.innerHTML += '<div style="text-align:center;color:var(--text4);margin-top:20px;">لا توجد رسائل بعد..</div>';
+                if (area) {
+                    area.innerHTML = '<div class="date-divider">اليوم</div>';
+                    if (snap.empty) {
+                        area.innerHTML += '<div style="text-align:center;color:var(--text4);margin-top:20px;">ابدأ الكلام الآن..</div>';
+                    }
+                    snap.forEach(doc => {
+                        const data = doc.data();
+                        const m = {
+                            id: doc.id,
+                            ...data,
+                            time: data.time?.toDate().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) || 'الآن'
+                        };
+                        const isMe = m.uid === currentUser.uid;
+                        const div = document.createElement('div');
+                        div.innerHTML = renderMsg(m, isMe);
+                        area.appendChild(div.firstElementChild);
+                    });
+                    area.scrollTop = area.scrollHeight;
                 }
-                snap.forEach(doc => {
-                    const data = doc.data();
-                    const m = {
-                        id: doc.id,
-                        ...data,
-                        time: data.time?.toDate().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) || 'الآن'
-                    };
-                    const isMe = m.uid === currentUser.uid;
-                    const div = document.createElement('div');
-                    div.innerHTML = renderMsg(m, isMe);
-                    area.appendChild(div.firstElementChild);
-                });
-                area.scrollTop = area.scrollHeight;
+            }, err => {
+                console.error("Snapshot error:", err);
             });
     }
-}
-
-// دالة الرجوع للقائمة
-function backToList() {
-    document.getElementById('chat-room-view').style.display = 'none';
-    document.getElementById('chat-list-view').style.display = 'flex';
-}
-
-// تحديث حالة الاتصال أول ما يفتح
-auth.onAuthStateChanged(async user => {
-    if (user && db) {
-        currentUser = user;
-        // تسجيل الدخول كـ online
-        db.collection('users').doc(user.uid).update({ status: 'online' }).catch(()=>{});
-        
-        try {
-            const doc = await db.collection('users').doc(user.uid).get();
-            if (doc.exists) currentUserData = doc.data();
-        } catch (e) {}
-    }
-});
-  }
-  renderDemoMsgs();
-  if(db&&currentUser){
-    const chatId=isGroup?'group':`private_${[currentUser.uid,id].sort().join('_')}`;
-    db.collection('chats').doc(chatId).collection('messages')
-      .orderBy('time','asc').limit(50)
-      .onSnapshot(snap=>{
-        if(snap.empty)return;
-        const area=document.getElementById('messages-area');
-        area.innerHTML=`<div class="date-divider">اليوم</div>`;
-        snap.forEach(doc=>{
-          const m={id:doc.id,...doc.data(),time:doc.data().time?.toDate().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})||''};
-          const isMe=m.uid===currentUser.uid;
-          const div=document.createElement('div');
-          div.innerHTML=renderMsg(m,isMe);
-          area.appendChild(div.firstElementChild);
-        });
-        area.scrollTop=area.scrollHeight;
-      });
-  }
-}
-
+};
 function backToList(){
   document.getElementById('chat-room-view').style.display='none';
   document.getElementById('chat-list-view').style.display='flex';
