@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#06080f">
+<title>لمة الثانوية — التسجيل والدخول</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06080f;--bg2:#0a0e1a;--bg3:#0f1525;--card:#111827;--card2:#1a2240;
+  --blue:#3b82f6;--blue2:#60a5fa;--teal:#14b8a6;--teal2:#2dd4bf;
+  --purple:#8b5cf6;--purple2:#a78bfa;--gold:#f59e0b;--gold2:#fbbf24;
+  --green:#22c55e;--red:#ef4444;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--text4:#475569;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --r:12px;--r2:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(59,130,246,0.07),transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(20,184,166,0.07),transparent 50%);pointer-events:none}
+.wrap{max-width:480px;margin:0 auto;padding:24px 16px 40px;position:relative;z-index:1}
+.logo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:20px}
+.logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-size:28px;font-weight:900;color:#fff;margin-bottom:10px;animation:popIn 0.6s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
+.logo-name{font-family:'Cairo',sans-serif;font-size:20px;font-weight:900;color:var(--text)}
+.logo-name span{color:var(--blue2)}
+.logo-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.auth-tabs{display:flex;gap:0;background:var(--card);border-radius:var(--r);padding:4px;margin-bottom:20px}
+.auth-tab{flex:1;padding:9px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;text-align:center;transition:all 0.2s;color:var(--text3);font-family:'Tajawal',sans-serif;border:none;background:transparent}
+.auth-tab.active{background:var(--card2);color:var(--text);border:0.5px solid var(--border2)}
+.screen{display:none;animation:fadeUp 0.4s ease both}
+.screen.show{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.steps-bar{display:flex;align-items:center;margin-bottom:20px}
+.step-item{display:flex;flex-direction:column;align-items:center;flex:1}
+.step-circle{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:1.5px solid var(--border);color:var(--text3);background:var(--card);transition:all 0.3s;z-index:1}
+.step-circle.active{background:rgba(59,130,246,0.15);border-color:var(--blue);color:var(--blue2)}
+.step-circle.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.step-lbl{font-size:8px;color:var(--text4);margin-top:3px;white-space:nowrap}
+.step-lbl.active{color:var(--blue2)}
+.step-line{flex:1;height:1.5px;background:var(--border);margin-top:-13px;transition:background 0.3s}
+.step-line.done{background:var(--teal)}
+.step-content{display:none;animation:fadeUp 0.35s ease both}
+.step-content.show{display:block}
+.step-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:3px}
+.step-sub{font-size:11px;color:var(--text3);margin-bottom:18px}
+.field{margin-bottom:12px}
+.field-label{font-size:11px;color:var(--text2);margin-bottom:5px;display:flex;align-items:center;justify-content:space-between}
+.req-badge{font-size:9px;color:var(--red);background:rgba(239,68,68,0.1);padding:1px 6px;border-radius:4px}
+.opt-badge{font-size:9px;color:var(--text4);background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:4px}
+.field-input{width:100%;background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:11px 14px;font-size:13px;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;transition:border-color 0.2s}
+.field-input:focus{border-color:var(--blue)}
+.field-input::placeholder{color:var(--text4)}
+.field-input:disabled{opacity:0.5;cursor:not-allowed}
+.pass-wrap{position:relative}
+.pass-wrap .field-input{padding-left:42px}
+.pass-eye{position:absolute;left:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;color:var(--text3)}
+.username-status{font-size:10px;margin-top:4px;display:none}
+.username-status.ok{color:var(--green);display:block}
+.username-status.err{color:var(--red);display:block}
+.username-status.checking{color:var(--text3);display:block}
+.or-divider{display:flex;align-items:center;gap:10px;margin:14px 0}
+.or-line{flex:1;height:0.5px;background:var(--border)}
+.or-txt{font-size:11px;color:var(--text4)}
+.google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border-radius:var(--r2);padding:12px;cursor:pointer;border:none;transition:all 0.2s;margin-bottom:4px}
+.google-btn:hover{background:#f1f5f9;transform:translateY(-1px)}
+.google-btn-txt{font-size:14px;font-weight:600;color:#1e293b;font-family:'Tajawal',sans-serif}
+.photo-upload{display:flex;align-items:center;gap:12px;background:var(--card);border:0.5px dashed rgba(255,255,255,0.12);border-radius:var(--r);padding:12px;cursor:pointer;transition:border-color 0.2s;margin-bottom:12px}
+.photo-upload:hover{border-color:var(--blue)}
+.photo-circle{width:44px;height:44px;border-radius:50%;background:rgba(59,130,246,0.1);border:0.5px solid rgba(59,130,246,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden}
+.photo-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.date-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:4px}
+.date-select{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:10px 6px;font-size:12px;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;width:100%;transition:border-color 0.2s;cursor:pointer;text-align:center}
+.date-select:focus{border-color:var(--blue)}
+.date-select option{background:#111827;color:var(--text)}
+.grade-type-label{font-size:10px;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.type-dot{width:5px;height:5px;border-radius:50%}
+.grade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px}
+.grade-btn{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:9px 4px;font-size:11px;color:var(--text2);cursor:pointer;text-align:center;transition:all 0.2s;font-family:'Tajawal',sans-serif}
+.grade-btn.active-blue{background:rgba(59,130,246,0.12);border-color:var(--blue);color:var(--blue2)}
+.grade-btn.active-teal{background:rgba(20,184,166,0.12);border-color:var(--teal);color:var(--teal2)}
+.branch-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.branch-btn{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:11px 8px;font-size:12px;color:var(--text2);cursor:pointer;text-align:center;transition:all 0.2s;font-family:'Tajawal',sans-serif}
+.branch-btn.active{background:rgba(59,130,246,0.12);border-color:var(--blue);color:var(--blue2)}
+.branch-full{grid-column:1/-1}
+.num-rules{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:10px}
+.num-rules-title{font-size:10px;color:var(--text3);margin-bottom:4px}
+.num-rule{font-size:10px;color:var(--text2);line-height:1.9}
+.num-row{display:flex;gap:6px;margin-bottom:6px}
+.num-prefix{background:rgba(59,130,246,0.15);border:0.5px solid rgba(59,130,246,0.3);border-radius:var(--r);padding:11px 12px;font-size:14px;font-weight:700;color:var(--blue2);flex-shrink:0;display:flex;align-items:center}
+.num-input{flex:1;background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:11px 12px;font-size:14px;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;direction:ltr;letter-spacing:2px;transition:border-color 0.2s}
+.num-input:focus{border-color:var(--blue)}
+.num-input::placeholder{color:var(--text4);letter-spacing:0}
+.random-btn{background:rgba(139,92,246,0.12);border:0.5px solid rgba(139,92,246,0.25);border-radius:var(--r);padding:11px 10px;font-size:11px;color:var(--purple2);cursor:pointer;flex-shrink:0;font-family:'Tajawal',sans-serif;transition:all 0.2s}
+.random-btn:hover{background:rgba(139,92,246,0.2)}
+.num-preview{font-size:10px;color:var(--text4);margin-bottom:4px}
+.num-preview span{color:var(--blue2);font-weight:500}
+.primary-btn{width:100%;background:linear-gradient(135deg,var(--blue),var(--teal));border-radius:var(--r2);padding:13px;font-size:14px;font-weight:700;color:#fff;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;transition:all 0.2s;margin-top:6px}
+.primary-btn:hover{opacity:0.9;transform:translateY(-1px)}
+.primary-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.secondary-btn{width:100%;background:transparent;border:0.5px solid var(--border2);border-radius:var(--r2);padding:11px;font-size:13px;color:var(--text2);cursor:pointer;font-family:'Tajawal',sans-serif;margin-top:8px;transition:all 0.2s}
+.secondary-btn:hover{background:var(--card)}
+.err-msg{font-size:10px;color:var(--red);margin-top:3px;display:none}
+.err-msg.show{display:block}
+.confetti-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;position:fixed;inset:0;background:var(--bg);z-index:999;overflow:hidden}
+.confetti-screen.show{display:flex}
+.conf-emoji{font-size:56px;animation:bounce 0.8s ease infinite alternate;margin-bottom:16px}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-10px)}}
+.conf-title{font-family:'Cairo',sans-serif;font-size:22px;font-weight:900;color:var(--text);margin-bottom:8px}
+.conf-sub{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.7}
+.conf-parts{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.cp{position:absolute;border-radius:2px;animation:cfFall linear infinite}
+@keyframes cfFall{0%{transform:translateY(-30px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.join-btn{background:linear-gradient(135deg,var(--blue),var(--teal));border-radius:var(--r2);padding:13px 28px;font-size:14px;font-weight:700;color:#fff;border:none;cursor:pointer;font-family:'Tajawal',sans-serif;margin-bottom:10px;transition:all 0.2s}
+.skip-link{font-size:12px;color:var(--text3);cursor:pointer;text-decoration:underline}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card2);border:0.5px solid var(--border2);border-radius:var(--r);padding:10px 18px;font-size:12px;color:var(--text);z-index:9999;transition:all 0.3s;pointer-events:none;white-space:nowrap;opacity:0}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.btn-loader{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<div class="confetti-screen" id="conf-screen">
+  <div class="conf-parts" id="conf-parts"></div>
+  <div class="conf-emoji">🎉</div>
+  <div class="conf-title">أهلاً بيك في لمة الثانوية!</div>
+  <div class="conf-sub">تسجيلك اكتمل بنجاح ✅<br>انضم لجروب دفعة 2026!</div>
+  <button class="join-btn" onclick="location.href='chat.html'">انضم لجروب الدفعة 💬</button>
+  <div class="skip-link" onclick="location.href='index.html'">تخطي — الرئيسية</div>
+</div>
+
+<div class="wrap" id="main-wrap">
+  <div class="logo-wrap">
+    <div class="logo">ل</div>
+    <div class="logo-name">لمة <span>الثانوية</span></div>
+    <div class="logo-sub">منصة دفعة 2026 🎯</div>
+  </div>
+
+  <div class="auth-tabs" id="auth-tabs">
+    <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">تسجيل الدخول</button>
+    <button class="auth-tab" id="tab-register" onclick="switchTab('register')">حساب جديد</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="screen show" id="login-screen">
+    <button class="google-btn" onclick="signInGoogle()">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <div class="google-btn-txt">الدخول بجوجل</div>
+    </button>
+    <div class="or-divider"><div class="or-line"></div><div class="or-txt">أو بالبريد وكلمة السر</div><div class="or-line"></div></div>
+    <div class="field">
+      <div class="field-label"><span>البريد أو اسم المستخدم</span></div>
+      <input class="field-input" id="login-email" placeholder="example@gmail.com أو username" type="text" autocomplete="username">
+    </div>
+    <div class="field">
+      <div class="field-label"><span>كلمة السر</span><span style="font-size:10px;color:var(--blue2);cursor:pointer" onclick="forgotPassword()">نسيت كلمة السر؟</span></div>
+      <div class="pass-wrap"><input class="field-input" id="login-pass" placeholder="كلمة السر" type="password" autocomplete="current-password"><span class="pass-eye" onclick="togglePass('login-pass',this)">👁</span></div>
+    </div>
+    <div class="err-msg" id="login-err">البريد أو كلمة السر غلط</div>
+    <button class="primary-btn" id="login-btn" onclick="doLogin()">تسجيل الدخول</button>
+    <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--text3)">مش عندك حساب؟ <span style="color:var(--blue2);cursor:pointer" onclick="switchTab('register')">سجل دلوقتي</span></div>
+  </div>
+
+  <!-- REGISTER -->
+  <div class="screen" id="register-screen">
+    <div class="steps-bar">
+      <div class="step-item"><div class="step-circle active" id="sc1">1</div><div class="step-lbl active" id="sl1">الحساب</div></div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-item"><div class="step-circle" id="sc2">2</div><div class="step-lbl" id="sl2">بياناتك</div></div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-item"><div class="step-circle" id="sc3">3</div><div class="step-lbl" id="sl3">صفك</div></div>
+      <div class="step-line" id="line3"></div>
+      <div class="step-item"><div class="step-circle" id="sc4">4</div><div class="step-lbl" id="sl4">رقمك</div></div>
+    </div>
+
+    <!-- Step 1: Account -->
+    <div class="step-content show" id="reg-s1">
+      <div class="step-title">إنشاء الحساب 🔐</div>
+      <div class="step-sub">خطوة 1 من 4</div>
+      <button class="google-btn" onclick="signInGoogle()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <div class="google-btn-txt">التسجيل بجوجل</div>
+      </button>
+      <div class="or-divider"><div class="or-line"></div><div class="or-txt">أو بالبريد وكلمة السر</div><div class="or-line"></div></div>
+      <div class="field">
+        <div class="field-label"><span>البريد الإلكتروني</span><span class="req-badge">إجباري ✱</span></div>
+        <input class="field-input" id="reg-email" placeholder="example@gmail.com" type="email" autocomplete="email">
+        <div class="err-msg" id="reg-email-err">أدخل بريد إلكتروني صحيح</div>
+      </div>
+      <div class="field">
+        <div class="field-label"><span>اسم المستخدم</span><span class="req-badge">إجباري ✱</span></div>
+        <input class="field-input" id="reg-username" placeholder="مثال: hamo_2026" type="text" autocomplete="username" oninput="checkUsername(this.value)">
+        <div class="username-status" id="username-status"></div>
+        <div style="font-size:10px;color:var(--text4);margin-top:3px">حروف إنجليزية وأرقام و _ فقط — بين 3 و 20 حرف</div>
+      </div>
+      <div class="field">
+        <div class="field-label"><span>كلمة السر</span><span class="req-badge">إجباري ✱</span></div>
+        <div class="pass-wrap"><input class="field-input" id="reg-pass" placeholder="8 أحرف على الأقل" type="password" autocomplete="new-password" oninput="checkPassStr(this.value)"><span class="pass-eye" onclick="togglePass('reg-pass',this)">👁</span></div>
+        <div class="err-msg" id="reg-pass-err">كلمة السر 8 أحرف على الأقل</div>
+      </div>
+      <div class="field">
+        <div class="field-label"><span>تأكيد كلمة السر</span><span class="req-badge">إجباري ✱</span></div>
+        <div class="pass-wrap"><input class="field-input" id="reg-pass2" placeholder="أعد كتابة كلمة السر" type="password" autocomplete="new-password"><span class="pass-eye" onclick="togglePass('reg-pass2',this)">👁</span></div>
+        <div class="err-msg" id="reg-pass2-err">كلمتا السر غير متطابقتين</div>
+      </div>
+      <button class="primary-btn" id="s1-btn" onclick="goS2()">التالي ←</button>
+      <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--text3)">عندك حساب؟ <span style="color:var(--blue2);cursor:pointer" onclick="switchTab('login')">سجل دخولك</span></div>
+    </div>
+
+    <!-- Step 2: Personal info -->
+    <div class="step-content" id="reg-s2">
+      <div class="step-title">بياناتك الشخصية 👤</div>
+      <div class="step-sub">خطوة 2 من 4</div>
+      <input type="file" id="photo-file" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+      <div class="photo-upload" onclick="document.getElementById('photo-file').click()">
+        <div class="photo-circle" id="photo-preview">📷</div>
+        <div><div style="font-size:12px;font-weight:500;color:var(--text)">صورة البروفايل</div><div style="font-size:10px;color:var(--text4);margin-top:2px">اختياري</div></div>
+      </div>
+      <div class="field">
+        <div class="field-label"><span>الاسم الثلاثي</span><span class="req-badge">إجباري ✱</span></div>
+        <input class="field-input" id="reg-name" placeholder="مثال: محمد أحمد علي" type="text">
+        <div class="err-msg" id="name-err">أدخل اسمك الثلاثي كامل</div>
+      </div>
+      <div class="field">
+        <div class="field-label"><span>اللقب</span><span class="opt-badge">اختياري</span></div>
+        <input class="field-input" id="reg-nickname" placeholder="مثال: HAMO أو الكيميائي 😄" type="text">
+      </div>
+      <div class="field">
+        <div class="field-label"><span>تاريخ الميلاد</span><span class="req-badge">إجباري ✱</span></div>
+        <div class="date-row">
+          <select class="date-select" id="birth-day"><option value="">اليوم</option></select>
+          <select class="date-select" id="birth-month">
+            <option value="">الشهر</option>
+            <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
+            <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
+            <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
+            <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+          </select>
+          <select class="date-select" id="birth-year"><option value="">السنة</option></select>
+        </div>
+        <div class="err-msg" id="birth-err">أدخل تاريخ ميلادك كامل</div>
+      </div>
+      <div class="field">
+        <div class="field-label"><span>رقم الهاتف</span><span class="opt-badge">اختياري — لك فقط</span></div>
+        <input class="field-input" id="reg-phone" placeholder="01xxxxxxxxx" type="tel" maxlength="11">
+        <div style="font-size:10px;color:var(--text4);margin-top:3px">لن يظهر لأحد غيرك وغير المطور</div>
+      </div>
+      <button class="primary-btn" onclick="goS3()">التالي ←</button>
+      <button class="secondary-btn" onclick="goRegTo(1)">← رجوع</button>
+    </div>
+
+    <!-- Step 3: Grade -->
+    <div class="step-content" id="reg-s3">
+      <div class="step-title">صفك وشعبتك 📚</div>
+      <div class="step-sub">خطوة 3 من 4</div>
+      <div>
+        <div class="grade-type-label" style="color:var(--blue2)"><div class="type-dot" style="background:var(--blue)"></div>ثانوي عام</div>
+        <div class="grade-grid">
+          <div class="grade-btn" id="g-1e" onclick="selGrade('1e','blue')">أولى عام</div>
+          <div class="grade-btn" id="g-2e" onclick="selGrade('2e','blue')">ثانية عام</div>
+          <div class="grade-btn" id="g-3e" onclick="selGrade('3e','blue')">ثالثة عام</div>
+        </div>
+        <div class="grade-type-label" style="color:var(--teal2)"><div class="type-dot" style="background:var(--teal)"></div>أزهر</div>
+        <div class="grade-grid">
+          <div class="grade-btn" id="g-1z" onclick="selGrade('1z','teal')">أولى أزهر</div>
+          <div class="grade-btn" id="g-2z" onclick="selGrade('2z','teal')">ثانية أزهر</div>
+          <div class="grade-btn" id="g-3z" onclick="selGrade('3z','teal')">ثالثة أزهر</div>
+        </div>
+      </div>
+      <div class="err-msg" id="grade-err">اختار صفك أولاً</div>
+      <div style="font-size:11px;color:var(--text2);margin:8px 0 6px;display:flex;justify-content:space-between"><span>الشعبة</span><span class="req-badge">إجباري ✱</span></div>
+      <div class="branch-grid" id="branch-grid">
+        <div class="branch-btn" onclick="selBranch(this)">علمي علوم</div>
+        <div class="branch-btn" onclick="selBranch(this)">علمي رياضة</div>
+        <div class="branch-btn branch-full" onclick="selBranch(this)">أدبي</div>
+      </div>
+      <div class="err-msg" id="branch-err">اختار شعبتك أولاً</div>
+      <button class="primary-btn" onclick="goS4()">التالي ←</button>
+      <button class="secondary-btn" onclick="goRegTo(2)">← رجوع</button>
+    </div>
+
+    <!-- Step 4: Platform number -->
+    <div class="step-content" id="reg-s4">
+      <div class="step-title">رقم تواصلك على المنصة 🔢</div>
+      <div class="step-sub">خطوة 4 من 4</div>
+      <div class="num-rules">
+        <div class="num-rules-title">قواعد الرقم:</div>
+        <div class="num-rule">✓ يبدأ بـ <strong style="color:var(--blue2)">019</strong> إجباري<br>✓ طوله 11 رقم<br>✓ مينفعش اتنين نفس الرقم<br>✓ مينفعش يتغير غير كل شهرين</div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:6px;display:flex;justify-content:space-between"><span>رقم التواصل على المنصة</span><span class="req-badge">إجباري ✱</span></div>
+      <div class="num-row">
+        <div class="num-prefix">019</div>
+        <input class="num-input" id="platform-num" placeholder="xxxxxxxx" maxlength="8" type="tel" oninput="updateNumPreview()">
+        <div class="random-btn" onclick="genRandom()">🎲 عشوائي</div>
+      </div>
+      <div class="num-preview">رقمك: <span id="num-full">019xxxxxxxx</span></div>
+      <div class="err-msg" id="num-err">أدخل 8 أرقام بعد 019</div>
+      <div class="err-msg" id="num-taken">الرقم موجود — جرب رقم تاني</div>
+      <button class="primary-btn" id="finish-btn" onclick="finishReg()" style="margin-top:14px">إنهاء التسجيل 🎉</button>
+      <button class="secondary-btn" onclick="goRegTo(3)">← رجوع</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script>
+const FC={apiKey:"AIzaSyDZYPoS67TFo__Bb7ysANV97hRMXCGH8pw",authDomain:"thanaweya-2026.firebaseapp.com",projectId:"thanaweya-2026",storageBucket:"thanaweya-2026.firebasestorage.app",messagingSenderId:"598643977703",appId:"1:598643977703:web:3fbe9c9fbf40574b0fe142"};
+let db,auth,currentUser=null,photoBase64=null,selGradeVal=null,selBranchVal=null,uTimer=null;
+try{firebase.initializeApp(FC);auth=firebase.auth();db=firebase.firestore();}catch(e){}
+
+window.addEventListener('load',()=>{
+  fillDates();
+  if(auth)auth.onAuthStateChanged(u=>{if(u){currentUser=u;checkProfile(u);}});
+});
+
+function fillDates(){
+  const d=document.getElementById('birth-day');
+  const y=document.getElementById('birth-year');
+  for(let i=1;i<=31;i++){const o=document.createElement('option');o.value=i;o.textContent=i;d.appendChild(o);}
+  const cur=new Date().getFullYear();
+  for(let i=cur-13;i>=cur-24;i--){const o=document.createElement('option');o.value=i;o.textContent=i;y.appendChild(o);}
+}
+
+async function checkProfile(u){
+  if(!db)return;
+  try{
+    const doc=await db.collection('users').doc(u.uid).get();
+    if(doc.exists&&doc.data().fullName&&doc.data().platformNum){location.href='index.html';return;}
+    hideAuthTabs();
+    switchTab('register');
+    goRegTo(2);
+    if(u.email){const el=document.getElementById('reg-email');if(el){el.value=u.email;el.disabled=true;}}
+  }catch(e){}
+}
+
+function hideAuthTabs(){document.getElementById('auth-tabs').style.display='none';}
+
+function switchTab(t){
+  document.getElementById('tab-login').classList.toggle('active',t==='login');
+  document.getElementById('tab-register').classList.toggle('active',t==='register');
+  document.getElementById('login-screen').classList.toggle('show',t==='login');
+  document.getElementById('register-screen').classList.toggle('show',t==='register');
+}
+
+async function signInGoogle(){
+  if(!auth){showToast('Firebase غير مُعدّ');return;}
+  try{const p=new firebase.auth.GoogleAuthProvider();await auth.signInWithPopup(p);}
+  catch(e){showToast('فشل: '+e.message);}
+}
+
+async function doLogin(){
+  const eu=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  if(!eu||!pass){showErr('login-err','أدخل البريد وكلمة السر');return;}
+  const btn=document.getElementById('login-btn');
+  btn.disabled=true;btn.innerHTML='<span class="btn-loader"></span>جاري الدخول...';
+  try{
+    let email=eu;
+    if(!eu.includes('@')&&db){
+      const s=await db.collection('users').where('username','==',eu.toLowerCase()).limit(1).get();
+      if(!s.empty)email=s.docs[0].data().email;
+      else{showErr('login-err','اسم المستخدم غير موجود');btn.disabled=false;btn.textContent='تسجيل الدخول';return;}
+    }
+    await auth.signInWithEmailAndPassword(email,pass);
+    location.href='index.html';
+  }catch(e){
+    showErr('login-err','البريد أو كلمة السر غلط');
+    btn.disabled=false;btn.textContent='تسجيل الدخول';
+  }
+}
+
+async function forgotPassword(){
+  const email=document.getElementById('login-email').value.trim();
+  if(!email||!email.includes('@')){showToast('أدخل بريدك الإلكتروني أولاً');return;}
+  try{await auth.sendPasswordResetEmail(email);showToast('تم إرسال رابط إعادة التعيين ✓');}
+  catch(e){showToast('فشل إرسال البريد');}
+}
+
+function checkUsername(v){
+  const st=document.getElementById('username-status');
+  if(!v){st.className='username-status';return;}
+  if(!/^[a-zA-Z0-9_]{3,20}$/.test(v)){st.className='username-status err';st.textContent='حروف إنجليزية وأرقام و _ — بين 3 و 20 حرف';return;}
+  st.className='username-status checking';st.textContent='جاري التحقق...';
+  clearTimeout(uTimer);
+  uTimer=setTimeout(async()=>{
+    if(!db){st.className='username-status ok';st.textContent='✓ متاح';return;}
+    try{
+      const s=await db.collection('users').where('username','==',v.toLowerCase()).limit(1).get();
+      if(s.empty){st.className='username-status ok';st.textContent='✓ اسم المستخدم متاح';}
+      else{st.className='username-status err';st.textContent='✗ اسم المستخدم مأخوذ';}
+    }catch(e){st.className='username-status ok';st.textContent='✓ متاح';}
+  },700);
+}
+
+function checkPassStr(v){
+  const err=document.getElementById('reg-pass-err');
+  if(v.length>0&&v.length<8)err.classList.add('show');
+  else err.classList.remove('show');
+}
+
+function goRegTo(n){
+  document.querySelectorAll('.step-content').forEach(s=>s.classList.remove('show'));
+  document.getElementById('reg-s'+n).classList.add('show');
+  updateBar(n);window.scrollTo(0,0);
+}
+
+function updateBar(cur){
+  for(let i=1;i<=4;i++){
+    const c=document.getElementById('sc'+i);const l=document.getElementById('sl'+i);
+    if(!c)continue;
+    c.className='step-circle';l.className='step-lbl';
+    if(i<cur){c.classList.add('done');c.textContent='✓';}
+    else if(i===cur){c.classList.add('active');c.textContent=i;l.classList.add('active');}
+    else c.textContent=i;
+    if(i<4){const ln=document.getElementById('line'+i);if(ln)ln.className='step-line'+(i<cur?' done':'');}
+  }
+}
+
+async function goS2(){
+  const email=document.getElementById('reg-email').value.trim();
+  const user=document.getElementById('reg-username').value.trim();
+  const pass=document.getElementById('reg-pass').value;
+  const pass2=document.getElementById('reg-pass2').value;
+  if(!email||!email.includes('@')){showErr('reg-email-err','أدخل بريد إلكتروني صحيح');return;}
+  if(!user||!/^[a-zA-Z0-9_]{3,20}$/.test(user)){showToast('اسم المستخدم غير صحيح');return;}
+  if(pass.length<8){showErr('reg-pass-err','كلمة السر 8 أحرف على الأقل');return;}
+  if(pass!==pass2){showErr('reg-pass2-err','كلمتا السر غير متطابقتين');return;}
+  const btn=document.getElementById('s1-btn');
+  btn.disabled=true;btn.innerHTML='<span class="btn-loader"></span>جاري...';
+  try{
+    if(!currentUser&&auth){
+      const cred=await auth.createUserWithEmailAndPassword(email,pass);
+      currentUser=cred.user;
+    }
+    goRegTo(2);
+  }catch(e){
+    let msg='حصل خطأ';
+    if(e.code==='auth/email-already-in-use')msg='البريد مسجل بالفعل';
+    else if(e.code==='auth/weak-password')msg='كلمة السر ضعيفة جداً';
+    showToast(msg);
+  }finally{btn.disabled=false;btn.textContent='التالي ←';}
+}
+
+function goS3(){
+  const name=document.getElementById('reg-name').value.trim();
+  if(name.split(' ').filter(w=>w).length<3){showErr('name-err','أدخل اسمك الثلاثي كامل');return;}
+  const d=document.getElementById('birth-day').value;
+  const m=document.getElementById('birth-month').value;
+  const y=document.getElementById('birth-year').value;
+  if(!d||!m||!y){showErr('birth-err','أدخل تاريخ ميلادك كامل');return;}
+  document.getElementById('birth-err').classList.remove('show');
+  goRegTo(3);
+}
+
+function selGrade(g,color){
+  document.querySelectorAll('.grade-btn').forEach(b=>b.className='grade-btn');
+  document.getElementById('g-'+g).classList.add('active-'+color);
+  selGradeVal=g;
+  document.getElementById('grade-err').classList.remove('show');
+  const isAz=g.includes('z');
+  const grid=document.getElementById('branch-grid');
+  grid.innerHTML=isAz?
+    `<div class="branch-btn" onclick="selBranch(this)">علمي</div><div class="branch-btn" onclick="selBranch(this)">أدبي</div>`:
+    `<div class="branch-btn" onclick="selBranch(this)">علمي علوم</div><div class="branch-btn" onclick="selBranch(this)">علمي رياضة</div><div class="branch-btn branch-full" onclick="selBranch(this)">أدبي</div>`;
+  selBranchVal=null;
+}
+
+function selBranch(el){
+  document.querySelectorAll('.branch-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');selBranchVal=el.textContent.trim();
+  document.getElementById('branch-err').classList.remove('show');
+}
+
+function goS4(){
+  if(!selGradeVal){showErr('grade-err','اختار صفك أولاً');return;}
+  if(!selBranchVal){showErr('branch-err','اختار شعبتك أولاً');return;}
+  goRegTo(4);
+}
+
+function updateNumPreview(){
+  const v=document.getElementById('platform-num').value.replace(/\D/g,'');
+  document.getElementById('num-full').textContent='019'+(v||'xxxxxxxx');
+  document.getElementById('num-err').classList.remove('show');
+  document.getElementById('num-taken').classList.remove('show');
+}
+
+function genRandom(){
+  const r=Math.floor(Math.random()*90000000)+10000000;
+  document.getElementById('platform-num').value=r;updateNumPreview();
+}
+
+function gradeLabel(g){return{'1e':'أولى ثانوي','2e':'ثانية ثانوي','3e':'ثالثة ثانوي','1z':'أولى أزهر','2z':'ثانية أزهر','3z':'ثالثة أزهر'}[g]||g;}
+
+async function finishReg(){
+  const nv=document.getElementById('platform-num').value.replace(/\D/g,'');
+  if(nv.length!==8){showErr('num-err','أدخل 8 أرقام بعد 019');return;}
+  const fullNum='019'+nv;
+  const btn=document.getElementById('finish-btn');
+  btn.disabled=true;btn.innerHTML='<span class="btn-loader"></span>جاري الحفظ...';
+  try{
+    if(db){
+      const ex=await db.collection('users').where('platformNum','==',fullNum).get();
+      if(!ex.empty&&ex.docs[0].id!==currentUser?.uid){
+        document.getElementById('num-taken').classList.add('show');
+        btn.disabled=false;btn.textContent='إنهاء التسجيل 🎉';return;
+      }
+    }
+    const d=document.getElementById('birth-day').value;
+    const m=document.getElementById('birth-month').value;
+    const y=document.getElementById('birth-year').value;
+    const data={
+      fullName:document.getElementById('reg-name').value.trim(),
+      username:document.getElementById('reg-username')?.value?.trim()?.toLowerCase()||null,
+      nickname:document.getElementById('reg-nickname').value.trim()||null,
+      email:currentUser?.email||null,
+      phone:document.getElementById('reg-phone').value.trim()||null,
+      birthDate:d&&m&&y?`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`:null,
+      grade:selGradeVal,gradeLabel:gradeLabel(selGradeVal),branch:selBranchVal,
+      platformNum:fullNum,photoURL:currentUser?.photoURL||null,photoBase64:photoBase64||null,
+      registeredAt:db?firebase.firestore.FieldValue.serverTimestamp():new Date().toISOString(),
+      lastSeen:db?firebase.firestore.FieldValue.serverTimestamp():new Date().toISOString(),
+      isAdmin:false,blocked:false,chatBanned:false,
+      numLastChanged:db?firebase.firestore.FieldValue.serverTimestamp():new Date().toISOString(),
+    };
+    if(db&&currentUser)await db.collection('users').doc(currentUser.uid).set(data,{merge:true});
+    showConfetti();
+  }catch(e){showToast('حصل خطأ — حاول تاني');}
+  finally{btn.disabled=false;btn.textContent='إنهاء التسجيل 🎉';}
+}
+
+function showConfetti(){
+  document.getElementById('conf-screen').classList.add('show');
+  makeConfetti();
+}
+
+function makeConfetti(){
+  const c=document.getElementById('conf-parts');c.innerHTML='';
+  const cols=['#3b82f6','#14b8a6','#f59e0b','#ef4444','#8b5cf6','#22c55e','#ec4899'];
+  for(let i=0;i<45;i++){
+    const p=document.createElement('div');p.className='cp';
+    const s=4+Math.random()*8;
+    p.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${1.5+Math.random()*2.5}s;animation-delay:${Math.random()*1.5}s;border-radius:${Math.random()>0.5?'50%':'2px'}`;
+    c.appendChild(p);
+  }
+}
+
+function handlePhoto(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    photoBase64=e.target.result;
+    const pr=document.getElementById('photo-preview');
+    pr.innerHTML=`<img src="${photoBase64}" alt="">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function showErr(id,msg){const el=document.getElementById(id);if(!el)return;if(msg)el.textContent=msg;el.classList.add('show');}
+function togglePass(id,btn){const el=document.getElementById(id);el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'👁':'🙈';}
+</script>
+</body>
+</html>
