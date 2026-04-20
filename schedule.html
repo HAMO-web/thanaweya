@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#06080f">
+<title>لمة الثانوية — الجداول</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06080f;--bg2:#0a0e1a;--bg3:#0f1525;--card:#111827;--card2:#1a2240;
+  --blue:#3b82f6;--blue2:#60a5fa;--teal:#14b8a6;--teal2:#2dd4bf;
+  --purple:#8b5cf6;--purple2:#a78bfa;--gold:#f59e0b;--gold2:#fbbf24;
+  --green:#22c55e;--red:#ef4444;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--text4:#475569;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --r:12px;--r2:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:80px}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 15%,rgba(59,130,246,0.06),transparent 50%),radial-gradient(ellipse at 85% 85%,rgba(20,184,166,0.06),transparent 50%);pointer-events:none;z-index:0}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(6,8,15,0.92);backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px}
+.back-btn{width:36px;height:36px;border-radius:10px;background:var(--card);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;text-decoration:none}
+.back-btn svg{width:18px;height:18px;stroke:var(--text2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.page-title{font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;color:var(--text)}
+.page-sub{font-size:10px;color:var(--text3);margin-top:1px}
+
+/* tabs */
+.tabs-wrap{position:sticky;top:57px;z-index:99;background:rgba(6,8,15,0.95);backdrop-filter:blur(12px);padding:10px 14px;border-bottom:0.5px solid var(--border)}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 16px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);font-size:12px;cursor:pointer;transition:all 0.2s;font-family:'Tajawal',sans-serif;white-space:nowrap}
+.tab.active{background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3);color:var(--blue2)}
+.tab.active-teal{background:rgba(20,184,166,0.12);border-color:rgba(20,184,166,0.3);color:var(--teal2)}
+
+/* content */
+.content{position:relative;z-index:1;padding:14px;max-width:860px;margin:0 auto}
+.tab-panel{display:none}
+.tab-panel.show{display:block;animation:fadeUp 0.4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* next exam banner */
+.next-banner{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(20,184,166,0.08));border:0.5px solid rgba(59,130,246,0.2);border-radius:var(--r2);padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.nb-left{}
+.nb-label{font-size:10px;color:var(--blue2);display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.nb-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.nb-name{font-size:14px;font-weight:700;color:var(--text)}
+.nb-date{font-size:11px;color:var(--text3);margin-top:2px}
+.nb-days{text-align:center;flex-shrink:0}
+.nb-num{font-family:'Cairo',sans-serif;font-size:32px;font-weight:700;color:var(--blue2);line-height:1}
+.nb-unit{font-size:10px;color:var(--text3)}
+
+/* section header */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:4px}
+.sec-title{font-size:13px;font-weight:600;color:var(--text2)}
+.sec-badge{font-size:10px;padding:3px 10px;border-radius:10px}
+.badge-blue{background:rgba(59,130,246,0.1);color:var(--blue2);border:0.5px solid rgba(59,130,246,0.2)}
+.badge-teal{background:rgba(20,184,166,0.1);color:var(--teal2);border:0.5px solid rgba(20,184,166,0.2)}
+.badge-gold{background:rgba(245,158,11,0.1);color:var(--gold2);border:0.5px solid rgba(245,158,11,0.2)}
+
+/* table card */
+.table-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);overflow:hidden;margin-bottom:14px}
+.table-head{padding:12px 16px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.th-title{font-size:13px;font-weight:600;color:var(--text)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:9px 12px;text-align:right;background:rgba(255,255,255,0.03);color:var(--text3);font-weight:500;border-bottom:0.5px solid var(--border);white-space:nowrap}
+td{padding:10px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr.today-row td{background:rgba(59,130,246,0.06)}
+tr.past-row td{opacity:0.45}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.today-badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:4px;background:var(--blue);color:#fff;margin-left:4px}
+.next-badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:4px;background:rgba(59,130,246,0.15);color:var(--blue2);margin-left:4px;border:0.5px solid rgba(59,130,246,0.3)}
+.subj-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:5px}
+.sb-blue{background:rgba(59,130,246,0.1);color:var(--blue2)}
+.sb-teal{background:rgba(20,184,166,0.1);color:var(--teal2)}
+.sb-gold{background:rgba(245,158,11,0.1);color:var(--gold2)}
+.sb-purple{background:rgba(139,92,246,0.1);color:var(--purple2)}
+.sb-green{background:rgba(34,197,94,0.1);color:#4ade80}
+.sb-pink{background:rgba(236,72,153,0.1);color:#f472b6}
+.days-left{font-size:11px;font-weight:600;color:var(--blue2)}
+.days-left.past{color:var(--text4)}
+.days-left.today{color:var(--green)}
+
+/* milestone timeline */
+.timeline{position:relative;padding-right:20px}
+.timeline::before{content:'';position:absolute;right:7px;top:0;bottom:0;width:1.5px;background:var(--border)}
+.tl-item{position:relative;padding:0 20px 16px 0}
+.tl-dot{position:absolute;right:0;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid var(--bg)}
+.tl-dot.done{background:var(--teal)}
+.tl-dot.next{background:var(--blue);box-shadow:0 0 8px rgba(59,130,246,0.5)}
+.tl-dot.future{background:var(--border2)}
+.tl-card{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:12px 14px;transition:border-color 0.2s}
+.tl-card.next-card{border-color:rgba(59,130,246,0.3)}
+.tl-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.tl-date{font-size:11px;color:var(--text3)}
+.tl-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:5px;margin-top:6px}
+.tl-tag.done{background:rgba(20,184,166,0.1);color:var(--teal2)}
+.tl-tag.next{background:rgba(59,130,246,0.1);color:var(--blue2)}
+.tl-tag.future{background:rgba(255,255,255,0.05);color:var(--text4)}
+
+/* note box */
+.note-box{background:rgba(245,158,11,0.06);border:0.5px solid rgba(245,158,11,0.15);border-radius:var(--r);padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:14px}
+.note-box strong{color:var(--gold2)}
+
+/* bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,26,0.95);backdrop-filter:blur(16px);border-top:0.5px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all 0.2s;text-decoration:none}
+.nav-item svg{width:22px;height:22px;stroke:var(--text4);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.2s}
+.nav-item.active svg{stroke:var(--blue2)}
+.nav-label{font-size:9px;color:var(--text4);transition:color 0.2s}
+.nav-item.active .nav-label{color:var(--blue2)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">
+    <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+  </a>
+  <div>
+    <div class="page-title">الجداول 📋</div>
+    <div class="page-sub">جداول الثانوية العامة والأزهرية — دور أول 2026</div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab active" id="tab-th" onclick="switchTab('th',this)">📚 الثانوية العامة</div>
+    <div class="tab" id="tab-az" onclick="switchTab('az',this)">🕌 الأزهرية علمي</div>
+    <div class="tab" id="tab-journey" onclick="switchTab('journey',this)">🗺️ الرحلة كاملة</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ── Thanaweya ── -->
+  <div class="tab-panel show" id="panel-th">
+    <div class="next-banner" id="th-banner">
+      <div class="nb-left">
+        <div class="nb-label"><div class="nb-dot"></div>أقرب امتحان — ثانوية</div>
+        <div class="nb-name" id="th-next-name">التربية الدينية</div>
+        <div class="nb-date" id="th-next-date">الأحد 21 يونيو 2026</div>
+      </div>
+      <div class="nb-days">
+        <div class="nb-num" id="th-next-days">—</div>
+        <div class="nb-unit">يوم</div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>ملحوظة:</strong> الجدول للدور الأول 2026 — نظام جديد. الامتحانات من الساعة 9 صباحاً. تستمر الامتحانات في حالة الإجازات الرسمية.
+    </div>
+
+    <div class="table-card">
+      <div class="table-head">
+        <div class="th-title">جدول الثانوية العامة — الدور الأول 2026</div>
+        <span class="sec-badge badge-blue">نظام جديد</span>
+      </div>
+      <div class="table-wrap">
+        <table id="th-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>اليوم والتاريخ</th>
+              <th>المادة</th>
+              <th>الشعبة</th>
+              <th>المدة</th>
+              <th>متبقي</th>
+            </tr>
+          </thead>
+          <tbody id="th-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Azhareyya ── -->
+  <div class="tab-panel" id="panel-az">
+    <div class="next-banner" id="az-banner">
+      <div class="nb-left">
+        <div class="nb-label"><div class="nb-dot" style="background:var(--teal)"></div>أقرب امتحان — أزهرية</div>
+        <div class="nb-name" id="az-next-name">القرآن الكريم والحديث</div>
+        <div class="nb-date" id="az-next-date">السبت 6 يونيو 2026</div>
+      </div>
+      <div class="nb-days">
+        <div class="nb-num" id="az-next-days" style="color:var(--teal2)">—</div>
+        <div class="nb-unit">يوم</div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>ملحوظة:</strong> الامتحانات الشفهية تنتهي الاثنين 29 يونيو 2026. يُمتحن الطلاب شفهياً في القرآن الكريم والحديث. تستمر الامتحانات إذا صادفت إجازة رسمية.
+    </div>
+
+    <div class="table-card">
+      <div class="table-head">
+        <div class="th-title">جدول الأزهرية — الدور الأول 2026</div>
+        <span class="sec-badge badge-teal">علمي</span>
+      </div>
+      <div class="table-wrap">
+        <table id="az-table">
+          <thead>
+            <tr>
+              <th>اليوم</th>
+              <th>التاريخ</th>
+              <th>المادة</th>
+              <th>من</th>
+              <th>إلى</th>
+              <th>متبقي</th>
+            </tr>
+          </thead>
+          <tbody id="az-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Journey ── -->
+  <div class="tab-panel" id="panel-journey">
+    <div class="timeline" id="journey-list"></div>
+  </div>
+
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    <span class="nav-label">الرئيسية</span>
+  </a>
+  <a class="nav-item active" href="schedule.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span class="nav-label">الجداول</span>
+  </a>
+  <a class="nav-item" href="chat.html">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <span class="nav-label">المحادثات</span>
+  </a>
+  <a class="nav-item" href="study.html">
+    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="nav-label">الدراسة</span>
+  </a>
+  <a class="nav-item" href="profile.html">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span class="nav-label">بروفايلي</span>
+  </a>
+</nav>
+
+<script>
+const TH_EXAMS=[
+  {d:'2026-06-21',day:'الأحد',subj:'التربية الدينية',branch:'عامة',dur:'ساعة ونصف',from:'9:00',to:'10:30',color:'blue'},
+  {d:'2026-06-21',day:'الأحد',subj:'التربية الوطنية',branch:'عامة',dur:'ساعة ونصف',from:'11:00',to:'12:30',color:'blue'},
+  {d:'2026-06-23',day:'الثلاثاء',subj:'اللغة الأجنبية الثانية',branch:'عامة',dur:'ساعتان',from:'9:00',to:'11:00',color:'purple'},
+  {d:'2026-06-28',day:'الأحد',subj:'اللغة العربية',branch:'عامة',dur:'3 ساعات',from:'9:00',to:'12:00',color:'gold'},
+  {d:'2026-07-02',day:'الخميس',subj:'الكيمياء',branch:'علوم ورياضيات',dur:'3 ساعات',from:'9:00',to:'12:00',color:'teal'},
+  {d:'2026-07-02',day:'الخميس',subj:'الجغرافيا',branch:'أدبية',dur:'3 ساعات',from:'9:00',to:'12:00',color:'green'},
+  {d:'2026-07-05',day:'الأحد',subj:'اللغة الأجنبية الأولى',branch:'عامة',dur:'3 ساعات',from:'9:00',to:'12:00',color:'purple'},
+  {d:'2026-07-09',day:'الخميس',subj:'الفيزياء',branch:'علوم ورياضيات',dur:'3 ساعات',from:'9:00',to:'12:00',color:'teal'},
+  {d:'2026-07-09',day:'الخميس',subj:'التاريخ',branch:'أدبية',dur:'3 ساعات',from:'9:00',to:'12:00',color:'green'},
+  {d:'2026-07-14',day:'الأحد',subj:'الرياضيات البحتة',branch:'رياضيات',dur:'ساعتان',from:'9:00',to:'11:00',color:'blue'},
+  {d:'2026-07-14',day:'الأحد',subj:'الأحياء',branch:'علوم',dur:'3 ساعات',from:'9:00',to:'12:00',color:'teal'},
+  {d:'2026-07-16',day:'الخميس',subj:'الرياضيات التطبيقية',branch:'رياضيات',dur:'ساعتان',from:'9:00',to:'11:00',color:'blue'},
+  {d:'2026-07-16',day:'الخميس',subj:'الإحصاء',branch:'أدبية',dur:'3 ساعات',from:'9:00',to:'12:00',color:'green'},
+];
+
+const AZ_EXAMS=[
+  {d:'2026-06-06',day:'السبت',subj:'القرآن الكريم والحديث',from:'9:00',to:'11:00/1:30',color:'gold'},
+  {d:'2026-06-08',day:'الاثنين',subj:'الرياضيات البحتة',from:'9:00',to:'12:00',color:'blue'},
+  {d:'2026-06-10',day:'الأربعاء',subj:'النحو',from:'9:00',to:'11:00',color:'purple'},
+  {d:'2026-06-13',day:'السبت',subj:'الفيزياء',from:'9:00',to:'12:00',color:'teal'},
+  {d:'2026-06-15',day:'الاثنين',subj:'الصرف',from:'9:00',to:'11:00',color:'purple'},
+  {d:'2026-06-17',day:'الأربعاء',subj:'الفقه',from:'9:00',to:'11:00',color:'gold'},
+  {d:'2026-06-20',day:'السبت',subj:'الكيمياء',from:'9:00',to:'12:00',color:'teal'},
+  {d:'2026-06-24',day:'الأربعاء',subj:'الأحياء',from:'9:00',to:'12:00',color:'green'},
+  {d:'2026-06-27',day:'السبت',subj:'اللغة الأجنبية',from:'9:00',to:'12:00',color:'purple'},
+  {d:'2026-06-29',day:'الاثنين',subj:'البلاغة',from:'9:00',to:'11:00',color:'gold'},
+  {d:'2026-07-01',day:'الأربعاء',subj:'التفسير',from:'9:00',to:'11:00',color:'gold'},
+  {d:'2026-07-04',day:'السبت',subj:'الرياضيات التطبيقية',from:'9:00',to:'12:00',color:'blue'},
+  {d:'2026-07-06',day:'الاثنين',subj:'التوحيد',from:'9:00',to:'11:00',color:'gold'},
+  {d:'2026-07-08',day:'الأربعاء',subj:'الأدب والنصوص',from:'9:00',to:'11:00',color:'purple'},
+];
+
+const MILESTONES=[
+  {name:'بدأت رحلة العد التنازلي',date:'2025-08-01',icon:'🚀',color:'done'},
+  {name:'بداية امتحانات الأزهرية',date:'2026-06-06',icon:'🕌',color:'teal'},
+  {name:'نهاية امتحانات الأزهرية',date:'2026-07-08',icon:'✅',color:'teal'},
+  {name:'بداية امتحانات الثانوية العامة',date:'2026-06-21',icon:'📚',color:'blue'},
+  {name:'نهاية امتحانات الثانوية العامة 🎉',date:'2026-07-16',icon:'🏁',color:'gold'},
+  {name:'بداية العام الجامعي الجديد 🎓',date:'2026-09-19',icon:'🏛️',color:'purple'},
+];
+
+function daysLeft(dateStr){
+  const now=new Date();
+  const target=new Date(dateStr+'T09:00:00');
+  return Math.ceil((target-now)/86400000);
+}
+
+function colorClass(c){
+  return{blue:'sb-blue',teal:'sb-teal',gold:'sb-gold',purple:'sb-purple',green:'sb-green',pink:'sb-pink'}[c]||'sb-blue';
+}
+
+function renderTables(){
+  const now=new Date();
+  const todayStr=now.toISOString().split('T')[0];
+  let thHtml='',thNextFound=false;
+  TH_EXAMS.forEach((e,i)=>{
+    const past=e.d<todayStr;
+    const today=e.d===todayStr;
+    const dl=daysLeft(e.d);
+    const isNext=!past&&!today&&!thNextFound;
+    if(isNext)thNextFound=true;
+    let daysCell='';
+    if(past)daysCell=`<span class="days-left past">انتهى</span>`;
+    else if(today)daysCell=`<span class="days-left today">اليوم!</span>`;
+    else if(isNext)daysCell=`<span class="days-left">${dl} يوم</span>`;
+    else daysCell=`<span style="font-size:11px;color:var(--text4)">${dl} يوم</span>`;
+    const todayBadge=today?'<span class="today-badge">اليوم</span>':'';
+    const nextBadge=isNext?'<span class="next-badge">القادم</span>':'';
+    thHtml+=`<tr class="${today?'today-row':''} ${past?'past-row':''}">
+      <td style="color:var(--text4)">${i+1}</td>
+      <td>${todayBadge}${nextBadge}${e.day} ${e.d.slice(5).replace('-','/')}</td>
+      <td><span class="subj-badge ${colorClass(e.color)}">${e.subj}</span></td>
+      <td style="font-size:11px;color:var(--text3)">${e.branch}</td>
+      <td style="font-size:11px;color:var(--text3)">${e.dur}</td>
+      <td>${daysCell}</td>
+    </tr>`;
+    if(today||isNext){
+      document.getElementById('th-next-name').textContent=e.subj;
+      document.getElementById('th-next-date').textContent=e.day+' '+e.d.slice(5).replace('-','/');
+      document.getElementById('th-next-days').textContent=today?'اليوم':dl;
+    }
+  });
+  document.getElementById('th-tbody').innerHTML=thHtml;
+
+  let azHtml='',azNextFound=false;
+  AZ_EXAMS.forEach((e,i)=>{
+    const past=e.d<todayStr;
+    const today=e.d===todayStr;
+    const dl=daysLeft(e.d);
+    const isNext=!past&&!today&&!azNextFound;
+    if(isNext)azNextFound=true;
+    let daysCell='';
+    if(past)daysCell=`<span class="days-left past">انتهى</span>`;
+    else if(today)daysCell=`<span class="days-left today">اليوم!</span>`;
+    else if(isNext)daysCell=`<span class="days-left">${dl} يوم</span>`;
+    else daysCell=`<span style="font-size:11px;color:var(--text4)">${dl} يوم</span>`;
+    const todayBadge=today?'<span class="today-badge">اليوم</span>':'';
+    const nextBadge=isNext?'<span class="next-badge">القادم</span>':'';
+    azHtml+=`<tr class="${today?'today-row':''} ${past?'past-row':''}">
+      <td>${todayBadge}${nextBadge}${e.day}</td>
+      <td style="direction:ltr;text-align:right">${e.d.slice(5).replace('-','/')}</td>
+      <td><span class="subj-badge ${colorClass(e.color)}">${e.subj}</span></td>
+      <td style="font-size:11px;color:var(--text3)">${e.from}</td>
+      <td style="font-size:11px;color:var(--text3)">${e.to}</td>
+      <td>${daysCell}</td>
+    </tr>`;
+    if((today||isNext)&&!azNextFound){
+      document.getElementById('az-next-name').textContent=e.subj;
+      document.getElementById('az-next-date').textContent=e.day+' '+e.d.slice(5).replace('-','/');
+      document.getElementById('az-next-days').textContent=today?'اليوم':dl;
+    }
+  });
+  document.getElementById('az-tbody').innerHTML=azHtml;
+}
+
+function renderJourney(){
+  const now=new Date();
+  let html='';
+  MILESTONES.forEach(m=>{
+    const target=new Date(m.date+'T09:00:00');
+    const diff=target-now;
+    const days=Math.ceil(diff/86400000);
+    const done=diff<0;
+    const isNext=!done&&MILESTONES.filter(x=>new Date(x.date+'T09:00:00')>now).indexOf(m)===0;
+    const dotClass=done?'done':isNext?'next':'future';
+    const tagClass=done?'done':isNext?'next':'future';
+    const tagTxt=done?'تم ✓':isNext?`القادم — ${days} يوم`:days>0?`${days} يوم`:'اليوم!';
+    const dateFormatted=target.toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    html+=`<div class="tl-item">
+      <div class="tl-dot ${dotClass}"></div>
+      <div class="tl-card ${isNext?'next-card':''}">
+        <div style="font-size:18px;margin-bottom:4px">${m.icon}</div>
+        <div class="tl-name">${m.name}</div>
+        <div class="tl-date">${dateFormatted}</div>
+        <div class="tl-tag ${tagClass}">${tagTxt}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('journey-list').innerHTML=html;
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('show'));
+  document.querySelectorAll('.tab').forEach(b=>{b.className='tab';});
+  document.getElementById('panel-'+id).classList.add('show');
+  if(id==='az')btn.className='tab active-teal';
+  else btn.className='tab active';
+}
+
+window.addEventListener('load',()=>{
+  renderTables();
+  renderJourney();
+});
+</script>
+</body>
+</html>

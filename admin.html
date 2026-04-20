@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#06080f">
+<title>لوحة التحكم — لمة الثانوية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06080f;--bg2:#0a0e1a;--bg3:#0f1525;--card:#111827;--card2:#1a2240;--card3:#1e2a4a;
+  --blue:#3b82f6;--blue2:#60a5fa;--teal:#14b8a6;--teal2:#2dd4bf;
+  --purple:#8b5cf6;--purple2:#a78bfa;--gold:#f59e0b;--gold2:#fbbf24;
+  --green:#22c55e;--red:#ef4444;--rose:#f43f5e;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--text4:#475569;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --r:12px;--r2:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 10% 10%,rgba(239,68,68,0.06) 0%,transparent 40%),radial-gradient(ellipse at 90% 90%,rgba(59,130,246,0.06) 0%,transparent 40%);pointer-events:none;z-index:0}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(6,8,15,0.95);backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.topbar-left{display:flex;align-items:center;gap:8px}
+.admin-badge{font-size:10px;padding:2px 10px;border-radius:6px;background:rgba(239,68,68,0.12);color:var(--red);border:0.5px solid rgba(239,68,68,0.25);font-weight:600}
+.icon-btn{width:36px;height:36px;border-radius:10px;background:var(--card);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s}
+.icon-btn:hover{background:var(--card2)}
+.icon-btn svg{width:18px;height:18px;stroke:var(--text2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+#access-denied{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+#access-denied.show{display:flex}
+
+/* Tabs */
+.admin-tabs{display:flex;gap:0;border-bottom:0.5px solid var(--border);overflow-x:auto;scrollbar-width:none;position:sticky;top:57px;z-index:90;background:rgba(6,8,15,0.95);backdrop-filter:blur(16px)}
+.admin-tabs::-webkit-scrollbar{display:none}
+.atab{padding:11px 14px;font-size:12px;color:var(--text3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s;flex-shrink:0;font-family:'Tajawal',sans-serif}
+.atab.active{color:var(--blue2);border-bottom-color:var(--blue)}
+.atab-content{display:none;padding:14px;position:relative;z-index:1}
+.atab-content.active{display:block}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:14px}
+.sc-n{font-family:'Cairo',sans-serif;font-size:28px;font-weight:700;line-height:1;margin-bottom:4px}
+.sc-n.blue{color:var(--blue2)}.sc-n.teal{color:var(--teal2)}.sc-n.gold{color:var(--gold2)}.sc-n.red{color:var(--red)}.sc-n.green{color:var(--green)}.sc-n.purple{color:var(--purple2)}
+.sc-l{font-size:10px;color:var(--text3)}
+.sc-trend{font-size:10px;color:var(--green);margin-top:3px;display:flex;align-items:center;gap:2px}
+
+/* Broadcast */
+.bc-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:16px;margin-bottom:12px}
+.bc-title{font-size:14px;font-weight:700;font-family:'Cairo',sans-serif;margin-bottom:4px}
+.bc-sub{font-size:11px;color:var(--text3);margin-bottom:12px}
+.bc-textarea{width:100%;background:var(--card2);border:0.5px solid var(--border2);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;resize:none;outline:none;min-height:80px;transition:border-color 0.2s;margin-bottom:10px}
+.bc-textarea:focus{border-color:rgba(59,130,246,0.4)}
+.bc-targets{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.bc-target{padding:4px 12px;border-radius:8px;font-size:11px;border:0.5px solid var(--border);background:var(--card2);cursor:pointer;transition:all 0.2s;font-family:'Tajawal',sans-serif}
+.bc-target.active{border-color:rgba(59,130,246,0.4);background:rgba(59,130,246,0.1);color:var(--blue2)}
+.bc-btn{padding:10px 20px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--teal));border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity 0.2s}
+.bc-btn:hover{opacity:0.9}
+
+/* Users */
+.search-bar{display:flex;gap:8px;margin-bottom:12px}
+.search-input{flex:1;background:var(--card);border:0.5px solid var(--border2);border-radius:10px;padding:9px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none}
+.search-input::placeholder{color:var(--text4)}
+.search-input:focus{border-color:rgba(59,130,246,0.3)}
+.filter-btn{padding:9px 12px;border-radius:10px;background:var(--card);border:0.5px solid var(--border);color:var(--text2);font-family:'Tajawal',sans-serif;font-size:12px;cursor:pointer}
+
+.user-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color 0.2s}
+.user-card:hover{border-color:var(--border2)}
+.user-card-top{display:flex;align-items:center;gap:10px}
+.uc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;font-family:'Cairo',sans-serif;color:#fff;flex-shrink:0;overflow:hidden}
+.uc-av img{width:100%;height:100%;object-fit:cover}
+.uc-info{flex:1}
+.uc-name{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+.uc-grade{font-size:10px;color:var(--text3);margin-top:1px}
+.uc-status{font-size:9px;padding:2px 7px;border-radius:5px}
+.uc-status.online{background:rgba(34,197,94,0.1);color:var(--green)}
+.uc-status.offline{background:rgba(100,116,139,0.1);color:var(--text3)}
+.uc-status.banned{background:rgba(239,68,68,0.1);color:var(--red)}
+.user-card-meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.um-badge{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:3px}
+.um-badge svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* User detail panel */
+.user-detail-panel{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center}
+.user-detail-panel.show{display:flex}
+.udp-sheet{background:var(--bg2);border-radius:20px 20px 0 0;border:0.5px solid var(--border2);border-bottom:none;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:sheetUp 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.udp-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:14px auto 16px}
+.udp-head{padding:0 16px 14px;display:flex;align-items:center;gap:12px;border-bottom:0.5px solid var(--border)}
+.udp-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden}
+.udp-av img{width:100%;height:100%;object-fit:cover}
+.udp-name{font-size:17px;font-weight:700;font-family:'Cairo',sans-serif}
+.udp-grade{font-size:11px;color:var(--text3);margin-top:2px}
+.udp-fields{padding:12px 16px}
+.udf{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.udf:last-child{border-bottom:none}
+.udf-label{font-size:11px;color:var(--text3)}
+.udf-val{font-size:12px;color:var(--text);font-weight:500;text-align:left;direction:ltr}
+.udp-actions{padding:12px 16px 20px;display:flex;flex-wrap:wrap;gap:8px}
+.ua-btn{flex:1;min-width:calc(50% - 4px);padding:10px 8px;border-radius:10px;border:0.5px solid var(--border);background:var(--card2);color:var(--text);font-family:'Tajawal',sans-serif;font-size:12px;cursor:pointer;text-align:center;transition:all 0.2s}
+.ua-btn:hover{background:var(--card3)}
+.ua-btn.danger{border-color:rgba(239,68,68,0.25);color:var(--red);background:rgba(239,68,68,0.06)}
+.ua-btn.success{border-color:rgba(34,197,94,0.25);color:var(--green);background:rgba(34,197,94,0.06)}
+.ua-btn.warn{border-color:rgba(245,158,11,0.25);color:var(--gold2);background:rgba(245,158,11,0.06)}
+
+/* Admins tab */
+.co-admin-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.ca-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0}
+.ca-info{flex:1}
+.ca-name{font-size:14px;font-weight:600}
+.ca-perms{font-size:10px;color:var(--text3);margin-top:3px}
+.ca-remove{font-size:11px;color:var(--red);cursor:pointer;padding:4px 8px;border-radius:6px;background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.2)}
+.perms-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.perm-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--card2);border-radius:8px;border:0.5px solid var(--border)}
+.perm-label{font-size:12px}
+.perm-sw{width:36px;height:20px;border-radius:10px;background:var(--card3);border:none;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0}
+.perm-sw.on{background:var(--blue)}
+.perm-sw::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;right:3px;transition:transform 0.2s}
+.perm-sw.on::after{transform:translateX(-16px)}
+.add-admin-row{display:flex;gap:8px;margin-top:12px}
+.add-admin-input{flex:1;background:var(--card2);border:0.5px solid var(--border2);border-radius:10px;padding:9px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none}
+.add-admin-btn{padding:9px 14px;border-radius:10px;background:var(--blue);color:#fff;border:none;font-family:'Tajawal',sans-serif;font-size:12px;cursor:pointer}
+
+/* Reports */
+.report-card{background:var(--card);border-radius:var(--r2);border:0.5px solid rgba(239,68,68,0.2);padding:14px;margin-bottom:8px}
+.rc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.rc-user{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.rc-time{font-size:10px;color:var(--text3)}
+.rc-msg{font-size:12px;color:var(--text2);background:var(--card2);border-radius:8px;padding:8px 10px;margin-bottom:8px;line-height:1.5}
+.rc-actions{display:flex;gap:6px}
+.rc-btn{flex:1;padding:7px;border-radius:8px;font-size:11px;cursor:pointer;border:0.5px solid var(--border);background:var(--card2);color:var(--text2);font-family:'Tajawal',sans-serif;transition:all 0.2s;text-align:center}
+.rc-btn.dismiss{border-color:rgba(34,197,94,0.2);color:var(--green);background:rgba(34,197,94,0.05)}
+.rc-btn.warn-user{border-color:rgba(245,158,11,0.2);color:var(--gold2);background:rgba(245,158,11,0.05)}
+.rc-btn.ban{border-color:rgba(239,68,68,0.2);color:var(--red);background:rgba(239,68,68,0.05)}
+
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card3);border:0.5px solid var(--border2);border-radius:12px;padding:10px 18px;font-size:13px;color:var(--text);opacity:0;transition:all 0.3s;z-index:500;white-space:nowrap;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- Access denied -->
+<div id="access-denied">
+  <div style="font-size:48px;margin-bottom:16px">🚫</div>
+  <div style="font-size:18px;font-weight:700;margin-bottom:8px">ممنوع الدخول</div>
+  <div style="font-size:13px;color:var(--text2);margin-bottom:20px">لوحة التحكم للمطور بس</div>
+  <a href="index.html" style="padding:10px 24px;border-radius:10px;background:var(--blue);color:#fff;text-decoration:none;font-size:13px">الرئيسية</a>
+</div>
+
+<!-- User detail panel -->
+<div class="user-detail-panel" id="user-detail-panel" onclick="closeUDP(event)">
+  <div class="udp-sheet">
+    <div class="udp-handle"></div>
+    <div class="udp-head">
+      <div class="udp-av" id="udp-av" style="background:#1d4ed8">م</div>
+      <div>
+        <div class="udp-name" id="udp-name">—</div>
+        <div class="udp-grade" id="udp-grade">—</div>
+      </div>
+    </div>
+    <div class="udp-fields">
+      <div class="udf"><span class="udf-label">UID</span><span class="udf-val" id="udp-uid" style="font-size:10px;max-width:180px;overflow:hidden;text-overflow:ellipsis">—</span></div>
+      <div class="udf"><span class="udf-label">الإيميل</span><span class="udf-val" id="udp-email">—</span></div>
+      <div class="udf"><span class="udf-label">رقم الهاتف</span><span class="udf-val" id="udp-phone">—</span></div>
+      <div class="udf"><span class="udf-label">رقم التواصل</span><span class="udf-val" id="udp-pnum" style="color:var(--blue2)">—</span></div>
+      <div class="udf"><span class="udf-label">تسجيل في</span><span class="udf-val" id="udp-reg">—</span></div>
+      <div class="udf"><span class="udf-label">آخر دخول</span><span class="udf-val" id="udp-last">—</span></div>
+      <div class="udf"><span class="udf-label">مدة الجلسة</span><span class="udf-val" id="udp-session">—</span></div>
+      <div class="udf"><span class="udf-label">الجهاز</span><span class="udf-val" id="udp-device">—</span></div>
+      <div class="udf"><span class="udf-label">عدد الرسايل</span><span class="udf-val" id="udp-msgs" style="color:var(--teal2)">—</span></div>
+      <div class="udf"><span class="udf-label">آخر رسالة</span><span class="udf-val" id="udp-lastmsg" style="max-width:180px;overflow:hidden;text-overflow:ellipsis">—</span></div>
+      <div class="udf"><span class="udf-label">الحالة</span><span class="udf-val" id="udp-status">—</span></div>
+    </div>
+    <div class="udp-actions">
+      <button class="ua-btn warn" onclick="adminAction('warn')">⚠️ تحذير</button>
+      <button class="ua-btn" onclick="adminAction('msg')">📩 مراسلة</button>
+      <button class="ua-btn warn" onclick="adminAction('mute')">🔇 كتم الشات</button>
+      <button class="ua-btn warn" onclick="adminAction('change-num')">🔄 تغيير رقم التواصل</button>
+      <button class="ua-btn danger" onclick="adminAction('ban-temp')">⛔ حظر مؤقت</button>
+      <button class="ua-btn danger" onclick="adminAction('ban-perm')">🚫 حظر دائم</button>
+      <button class="ua-btn success" onclick="adminAction('unban')">✅ رفع الحظر</button>
+      <button class="ua-btn danger" onclick="adminAction('kick')">💨 طرد من الشات</button>
+    </div>
+  </div>
+</div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="icon-btn" onclick="location.href='index.html'">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <span style="font-family:'Cairo',sans-serif;font-size:15px;font-weight:700">لوحة التحكم</span>
+    <span class="admin-badge">مدير</span>
+  </div>
+  <div style="display:flex;gap:6px">
+    <div class="icon-btn" onclick="refreshStats()">
+      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- Admin tabs -->
+<div class="admin-tabs">
+  <div class="atab active" onclick="switchTab('tab-overview',this)">📊 نظرة عامة</div>
+  <div class="atab" onclick="switchTab('tab-users',this)">👥 المستخدمون</div>
+  <div class="atab" onclick="switchTab('tab-broadcast',this)">📢 الإشعارات</div>
+  <div class="atab" onclick="switchTab('tab-reports',this)">🚩 البلاغات</div>
+  <div class="atab" onclick="switchTab('tab-admins',this)">🛡 المشرفون</div>
+</div>
+
+<!-- Overview -->
+<div class="atab-content active" id="tab-overview">
+  <div class="stats-grid">
+    <div class="stat-card"><div class="sc-n blue" id="st-total">—</div><div class="sc-l">إجمالي المستخدمين</div><div class="sc-trend">↑ <span id="st-new">—</span> جديد اليوم</div></div>
+    <div class="stat-card"><div class="sc-n green" id="st-online">—</div><div class="sc-l">أونلاين الآن</div></div>
+    <div class="stat-card"><div class="sc-n gold" id="st-msgs">—</div><div class="sc-l">إجمالي الرسايل</div></div>
+    <div class="stat-card"><div class="sc-n teal" id="st-today-msgs">—</div><div class="sc-l">رسايل اليوم</div></div>
+    <div class="stat-card"><div class="sc-n purple" id="st-study">—</div><div class="sc-l">جلسات مذاكرة</div></div>
+    <div class="stat-card"><div class="sc-n red" id="st-banned">—</div><div class="sc-l">محظورون</div></div>
+  </div>
+  <!-- Chart placeholder -->
+  <div style="background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:16px;margin-bottom:12px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:12px">📈 الدخول خلال آخر 7 أيام</div>
+    <div style="display:flex;align-items:flex-end;gap:6px;height:60px" id="visits-chart"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:9px;color:var(--text4)" id="visits-labels"></div>
+  </div>
+  <div style="background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:16px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:10px">🎓 توزيع الطلاب</div>
+    <div id="grade-dist"></div>
+  </div>
+</div>
+
+<!-- Users -->
+<div class="atab-content" id="tab-users">
+  <div class="search-bar">
+    <input class="search-input" id="user-search" placeholder="بحث بالاسم أو رقم التواصل..." oninput="filterUsers(this.value)">
+    <select class="filter-btn" id="user-filter" onchange="filterUsers(document.getElementById('user-search').value)" style="background:var(--card);border:0.5px solid var(--border);color:var(--text2);font-family:'Tajawal',sans-serif;outline:none;border-radius:10px;padding:9px 10px">
+      <option value="all">الكل</option>
+      <option value="online">أونلاين</option>
+      <option value="banned">محظورون</option>
+      <option value="azhar">أزهر</option>
+      <option value="thanawi">عام</option>
+    </select>
+  </div>
+  <div id="users-list">
+    <div style="text-align:center;padding:40px;color:var(--text3);font-size:13px">جاري التحميل...</div>
+  </div>
+</div>
+
+<!-- Broadcast -->
+<div class="atab-content" id="tab-broadcast">
+  <div class="bc-card">
+    <div class="bc-title">📢 إرسال إشعار للمستخدمين</div>
+    <div class="bc-sub">الرسالة تظهر كـ popup للمستخدمين وتتحفظ في إشعاراتهم</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:6px">الجمهور المستهدف:</div>
+    <div class="bc-targets">
+      <div class="bc-target active" data-t="all" onclick="toggleTarget(this)">الجميع</div>
+      <div class="bc-target" data-t="azhar" onclick="toggleTarget(this)">أزهريين فقط</div>
+      <div class="bc-target" data-t="thanawi" onclick="toggleTarget(this)">ثانوي عام فقط</div>
+      <div class="bc-target" data-t="grade3" onclick="toggleTarget(this)">ثالثة فقط</div>
+    </div>
+    <textarea class="bc-textarea" id="bc-msg" placeholder="اكتب نص الإشعار هنا..."></textarea>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="bc-btn" onclick="sendBroadcast()">📣 إرسال للجميع</button>
+      <span style="font-size:11px;color:var(--text3)" id="bc-preview-count">سيصل لـ — مستخدم</span>
+    </div>
+  </div>
+  <!-- Broadcast history -->
+  <div style="font-size:12px;color:var(--text3);margin-bottom:10px">سجل الإشعارات المُرسلة:</div>
+  <div id="bc-history">
+    <div style="background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:12px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">الإشعار الأول 🎉</span><span style="font-size:10px;color:var(--text3)">منذ يومين</span></div>
+      <div style="font-size:11px;color:var(--text2)">أهلاً بجميع طلاب دفعة 2026! المنصة متاحة الآن</div>
+      <div style="font-size:10px;color:var(--green);margin-top:4px">✓ وصل لـ 308 مستخدم</div>
+    </div>
+  </div>
+</div>
+
+<!-- Reports -->
+<div class="atab-content" id="tab-reports">
+  <div id="reports-list">
+    <div class="report-card">
+      <div class="rc-top">
+        <div class="rc-user">🚩 بلاغ على: <strong>مجهول</strong></div>
+        <div class="rc-time">منذ 2 ساعة</div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:6px">بلّغ عنه: أحمد علي</div>
+      <div class="rc-msg">"محتوى غير لائق في الشات العام"</div>
+      <div class="rc-actions">
+        <div class="rc-btn dismiss" onclick="handleReport(this,'dismiss')">✓ رفض البلاغ</div>
+        <div class="rc-btn warn-user" onclick="handleReport(this,'warn')">⚠️ تحذير</div>
+        <div class="rc-btn ban" onclick="handleReport(this,'ban')">🚫 حظر</div>
+      </div>
+    </div>
+    <div class="report-card">
+      <div class="rc-top">
+        <div class="rc-user">🚩 بلاغ على: <strong>ك</strong> كريم</div>
+        <div class="rc-time">منذ 5 ساعات</div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:6px">بلّغ عنه: سارة محمد</div>
+      <div class="rc-msg">"بعت رقم تليفونه في الشات"</div>
+      <div class="rc-actions">
+        <div class="rc-btn dismiss" onclick="handleReport(this,'dismiss')">✓ رفض البلاغ</div>
+        <div class="rc-btn warn-user" onclick="handleReport(this,'warn')">⚠️ تحذير</div>
+        <div class="rc-btn ban" onclick="handleReport(this,'ban')">🚫 حظر</div>
+      </div>
+    </div>
+    <div class="report-card">
+      <div class="rc-top">
+        <div class="rc-user">🚩 بلاغ على: <strong>ن</strong> نور</div>
+        <div class="rc-time">أمس</div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:6px">بلّغ عنه: محمد أحمد</div>
+      <div class="rc-msg">"إزعاج متكرر بمنشنات للجميع"</div>
+      <div class="rc-actions">
+        <div class="rc-btn dismiss" onclick="handleReport(this,'dismiss')">✓ رفض البلاغ</div>
+        <div class="rc-btn warn-user" onclick="handleReport(this,'warn')">⚠️ تحذير</div>
+        <div class="rc-btn ban" onclick="handleReport(this,'ban')">🚫 حظر</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Co-admins -->
+<div class="atab-content" id="tab-admins">
+  <div style="background:var(--card);border-radius:var(--r2);border:0.5px solid rgba(245,158,11,0.2);padding:14px;margin-bottom:14px">
+    <div style="font-size:12px;color:var(--gold2);margin-bottom:4px">👑 المدير الرئيسي</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:44px;height:44px;border-radius:50%;background:#854d0e;border:2px solid var(--gold2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff">H</div>
+      <div>
+        <div style="font-size:14px;font-weight:700">HAMO <span style="font-size:10px;color:var(--gold2)">✓</span></div>
+        <div style="font-size:10px;color:var(--text3)">محمد العوضي شاهين — مطور الموقع</div>
+        <div style="font-size:10px;color:var(--text4);font-family:monospace">01900000000</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;color:var(--text3);margin-bottom:10px">المشرفون المساعدون:</div>
+  <div id="co-admins-list">
+    <div style="text-align:center;padding:20px;font-size:12px;color:var(--text3)">لا يوجد مشرفون بعد</div>
+  </div>
+
+  <div style="background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:14px;margin-top:12px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:12px">➕ إضافة مشرف جديد</div>
+    <div class="add-admin-row">
+      <input class="add-admin-input" id="new-admin-num" placeholder="رقم التواصل (019xxxxxxxx)">
+      <button class="add-admin-btn" onclick="addCoAdmin()">إضافة</button>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:8px">الصلاحيات للمشرف الجديد:</div>
+    <div class="perms-grid" id="new-perms">
+      <div class="perm-toggle"><span class="perm-label">رفع أسئلة</span><button class="perm-sw on" onclick="this.classList.toggle('on')"></button></div>
+      <div class="perm-toggle"><span class="perm-label">حذف رسايل</span><button class="perm-sw on" onclick="this.classList.toggle('on')"></button></div>
+      <div class="perm-toggle"><span class="perm-label">كتم مستخدم</span><button class="perm-sw" onclick="this.classList.toggle('on')"></button></div>
+      <div class="perm-toggle"><span class="perm-label">حظر مستخدم</span><button class="perm-sw" onclick="this.classList.toggle('on')"></button></div>
+      <div class="perm-toggle"><span class="perm-label">إرسال إشعارات</span><button class="perm-sw" onclick="this.classList.toggle('on')"></button></div>
+      <div class="perm-toggle"><span class="perm-label">عرض البلاغات</span><button class="perm-sw on" onclick="this.classList.toggle('on')"></button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script>
+const FIREBASE_CONFIG={apiKey:"AIzaSyDZYPoS67TFo__Bb7ysANV97hRMXCGH8pw",authDomain:"thanaweya-2026.firebaseapp.com",projectId:"thanaweya-2026",storageBucket:"thanaweya-2026.firebasestorage.app",messagingSenderId:"598643977703",appId:"1:598643977703:web:3fbe9c9fbf40574b0ve142"};
+const ADMIN_EMAIL="alawadi7760@gmail.com";
+const ADMIN_NUM="01900000000";
+let db,auth,currentUser=null,allUsers=[],selectedUser=null;
+try{firebase.initializeApp(FIREBASE_CONFIG);auth=firebase.auth();db=firebase.firestore();}catch(e){}
+
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.atab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.atab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── STATS ──
+async function loadStats(){
+  if(!db)return;
+  try{
+    const snap=await db.collection('users').get();
+    document.getElementById('st-total').textContent=snap.size;
+    let banned=0,online=0;
+    const today=new Date();today.setHours(0,0,0,0);
+    let newToday=0;
+    allUsers=[];
+    snap.forEach(d=>{
+      const u={id:d.id,...d.data()};
+      allUsers.push(u);
+      if(u.blocked)banned++;
+      if(u.lastSeen?.toDate&&(new Date()-u.lastSeen.toDate())<300000)online++;
+      if(u.registeredAt?.toDate&&u.registeredAt.toDate()>today)newToday++;
+    });
+    document.getElementById('st-banned').textContent=banned;
+    document.getElementById('st-online').textContent=online;
+    document.getElementById('st-new').textContent=newToday;
+
+    const msgs=await db.collection('chats').doc('group').collection('messages').get();
+    document.getElementById('st-msgs').textContent=msgs.size;
+
+    renderUsers(allUsers);
+    renderChart();
+    renderGradeDist(allUsers);
+    document.getElementById('bc-preview-count').textContent=`سيصل لـ ${snap.size} مستخدم`;
+  }catch(e){console.error(e)}
+}
+
+function renderChart(){
+  const chart=document.getElementById('visits-chart');
+  const labels=document.getElementById('visits-labels');
+  const data=[12,34,28,45,62,38,71];
+  const days=['الخميس','الجمعة','السبت','الأحد','الاثنين','الثلاثاء','اليوم'];
+  const max=Math.max(...data);
+  chart.innerHTML=data.map((v,i)=>`<div style="flex:1;background:${i===6?'var(--blue)':'rgba(59,130,246,0.25)'};border-radius:4px 4px 0 0;height:${(v/max)*100}%;min-height:4px;transition:height 0.5s ${i*0.05}s" title="${v} دخول"></div>`).join('');
+  labels.innerHTML=days.map(d=>`<span>${d}</span>`).join('');
+}
+
+function renderGradeDist(users){
+  const counts={};
+  users.forEach(u=>{const g=(u.gradeLabel||'غير محدد');counts[g]=(counts[g]||0)+1;});
+  const total=users.length||1;
+  const el=document.getElementById('grade-dist');
+  const colors=['var(--blue)','var(--teal)','var(--purple)','var(--gold)','var(--green)','var(--rose)'];
+  el.innerHTML=Object.entries(counts).map(([g,c],i)=>`
+    <div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+        <span>${g}</span><span style="color:var(--text3)">${c} (${Math.round(c/total*100)}%)</span>
+      </div>
+      <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:5px;overflow:hidden">
+        <div style="height:100%;width:${c/total*100}%;background:${colors[i%colors.length]};border-radius:5px;transition:width 0.8s ${i*0.1}s ease"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ── USERS ──
+function renderUsers(users){
+  const list=document.getElementById('users-list');
+  if(!users.length){list.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:13px">لا يوجد مستخدمون</div>';return;}
+  list.innerHTML=users.map(u=>{
+    const name=u.fullName||u.displayName||'—';
+    const isOnline=u.lastSeen?.toDate&&(new Date()-u.lastSeen.toDate())<300000;
+    const grade=`${u.gradeLabel||''} ${u.branch||''}`.trim();
+    const lastSeenStr=u.lastSeen?.toDate?u.lastSeen.toDate().toLocaleDateString('ar-EG'):'—';
+    const statusClass=u.blocked?'banned':isOnline?'online':'offline';
+    const statusTxt=u.blocked?'محظور':isOnline?'أونلاين':'أوفلاين';
+    const color=u.color||'#1d4ed8';
+    const initial=name.charAt(0);
+    return `<div class="user-card" onclick="openUserDetail('${u.id}')">
+      <div class="user-card-top">
+        <div class="uc-av" style="background:${color}">${u.photoURL?`<img src="${u.photoURL}">`:`${initial}`}</div>
+        <div class="uc-info">
+          <div class="uc-name">${name} <span class="uc-status ${statusClass}">${statusTxt}</span></div>
+          <div class="uc-grade">${grade||'غير محدد'}</div>
+        </div>
+      </div>
+      <div class="user-card-meta">
+        <div class="um-badge"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.07 9.81"/></svg> ${u.platformNum||'—'}</div>
+        <div class="um-badge">📅 ${lastSeenStr}</div>
+        ${u.msgCount?`<div class="um-badge">💬 ${u.msgCount} رسالة</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterUsers(q){
+  const filter=document.getElementById('user-filter').value;
+  let filtered=allUsers.filter(u=>{
+    const name=(u.fullName||'').toLowerCase();
+    const num=(u.platformNum||'').toLowerCase();
+    const grade=(u.gradeLabel||'').toLowerCase();
+    const matchQ=!q||name.includes(q)||num.includes(q)||grade.includes(q);
+    const isOnline=u.lastSeen?.toDate&&(new Date()-u.lastSeen.toDate())<300000;
+    const matchF=filter==='all'||(filter==='online'&&isOnline)||(filter==='banned'&&u.blocked)||(filter==='azhar'&&(u.grade||'').includes('z'))||(filter==='thanawi'&&(u.grade||'').includes('e'));
+    return matchQ&&matchF;
+  });
+  renderUsers(filtered);
+}
+
+function openUserDetail(uid){
+  const u=allUsers.find(x=>x.id===uid);
+  if(!u)return;
+  selectedUser=u;
+  const name=u.fullName||u.displayName||'—';
+  const isOnline=u.lastSeen?.toDate&&(new Date()-u.lastSeen.toDate())<300000;
+  document.getElementById('udp-av').innerHTML=u.photoURL?`<img src="${u.photoURL}" style="width:100%;height:100%;object-fit:cover">`:(name.charAt(0));
+  document.getElementById('udp-av').style.background=u.color||'#1d4ed8';
+  document.getElementById('udp-name').textContent=name+(u.nickname?` (${u.nickname})`:'');
+  document.getElementById('udp-grade').textContent=`${u.gradeLabel||''} ${u.branch||''}`;
+  document.getElementById('udp-uid').textContent=uid;
+  document.getElementById('udp-email').textContent=u.email||'—';
+  document.getElementById('udp-phone').textContent=u.phone||'—';
+  document.getElementById('udp-pnum').textContent=u.platformNum||'—';
+  document.getElementById('udp-reg').textContent=u.registeredAt?.toDate?u.registeredAt.toDate().toLocaleDateString('ar-EG'):'—';
+  document.getElementById('udp-last').textContent=u.lastSeen?.toDate?u.lastSeen.toDate().toLocaleString('ar-EG'):'—';
+  document.getElementById('udp-session').textContent=u.sessionMins?`${u.sessionMins} دقيقة`:'—';
+  document.getElementById('udp-device').textContent=u.device||navigator.userAgent.includes('Android')?'Android':'—';
+  document.getElementById('udp-msgs').textContent=u.msgCount||'—';
+  document.getElementById('udp-lastmsg').textContent=u.lastMsg||'—';
+  document.getElementById('udp-status').textContent=u.blocked?'محظور':isOnline?'أونلاين':'أوفلاين';
+  document.getElementById('user-detail-panel').classList.add('show');
+}
+function closeUDP(e){if(e.target===document.getElementById('user-detail-panel'))document.getElementById('user-detail-panel').classList.remove('show');}
+
+async function adminAction(action){
+  if(!selectedUser||!db)return;
+  const uid=selectedUser.id;
+  const name=selectedUser.fullName||'المستخدم';
+  const ref=db.collection('users').doc(uid);
+  try{
+    if(action==='warn'){
+      await db.collection('notifications').add({toUid:uid,type:'warning',msg:'تلقيت تحذيراً من إدارة لمة الثانوية. يرجى الالتزام بقواعد المنصة.',ts:firebase.firestore.FieldValue.serverTimestamp()});
+      showToast(`⚠️ تم إرسال تحذير لـ ${name}`);
+    } else if(action==='mute'){
+      await ref.update({chatBanned:true,chatBannedUntil:new Date(Date.now()+24*60*60*1000)});
+      showToast(`🔇 تم كتم ${name} لمدة 24 ساعة`);
+    } else if(action==='ban-temp'){
+      const days=parseInt(prompt('عدد أيام الحظر؟')||'7');
+      await ref.update({blocked:true,blockedUntil:new Date(Date.now()+days*86400000),blockedReason:'حظر مؤقت من الإدارة'});
+      showToast(`⛔ تم حظر ${name} لمدة ${days} أيام`);
+    } else if(action==='ban-perm'){
+      if(!confirm(`هتحظر ${name} بشكل دائم؟`))return;
+      await ref.update({blocked:true,blockedUntil:null,blockedReason:'حظر دائم من الإدارة'});
+      showToast(`🚫 تم الحظر الدائم لـ ${name}`);
+    } else if(action==='unban'){
+      await ref.update({blocked:false,chatBanned:false,blockedUntil:null});
+      showToast(`✅ تم رفع الحظر عن ${name}`);
+    } else if(action==='kick'){
+      await ref.update({chatBanned:true,chatBannedUntil:new Date(Date.now()+60*60*1000)});
+      showToast(`💨 تم طرد ${name} من الشات لساعة`);
+    } else if(action==='change-num'){
+      const newNum=prompt(`رقم التواصل الجديد لـ ${name}:`);
+      if(!newNum||!newNum.startsWith('019')||newNum.length!==11){showToast('رقم غير صحيح');return;}
+      await ref.update({platformNum:newNum});
+      showToast(`✅ تم تغيير رقم التواصل`);
+    } else if(action==='msg'){
+      showToast('ميزة المراسلة المباشرة قريباً');
+    }
+    document.getElementById('user-detail-panel').classList.remove('show');
+    loadStats();
+  }catch(e){showToast('حصل خطأ: '+e.message);}
+}
+
+// ── BROADCAST ──
+let bcTarget='all';
+function toggleTarget(btn){
+  document.querySelectorAll('.bc-target').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  bcTarget=btn.dataset.t;
+}
+async function sendBroadcast(){
+  const msg=document.getElementById('bc-msg').value.trim();
+  if(!msg){showToast('⚠️ اكتب الرسالة الأول');return;}
+  if(!db){showToast('Firebase غير متصل');return;}
+  const btn=document.querySelector('.bc-btn');
+  btn.disabled=true;btn.textContent='جاري الإرسال...';
+  try{
+    await db.collection('broadcasts').add({
+      msg,target:bcTarget,
+      sentBy:currentUser?.email||ADMIN_EMAIL,
+      ts:firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    document.getElementById('bc-msg').value='';
+    showToast('✅ تم إرسال الإشعار للجميع 📣');
+    const newEntry=document.createElement('div');
+    newEntry.style.cssText='background:var(--card);border-radius:12px;border:0.5px solid var(--border);padding:12px;margin-bottom:8px';
+    newEntry.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">إشعار جديد</span><span style="font-size:10px;color:var(--text3)">الآن</span></div><div style="font-size:11px;color:var(--text2)">${msg}</div><div style="font-size:10px;color:var(--green);margin-top:4px">✓ تم الإرسال</div>`;
+    document.getElementById('bc-history').prepend(newEntry);
+  }catch(e){showToast('حصل خطأ: '+e.message);}
+  btn.disabled=false;btn.textContent='📣 إرسال للجميع';
+}
+
+// ── REPORTS ──
+function handleReport(btn,action){
+  const card=btn.closest('.report-card');
+  if(action==='dismiss'){showToast('✓ تم رفض البلاغ');}
+  else if(action==='warn'){showToast('⚠️ تم إرسال تحذير للمستخدم');}
+  else if(action==='ban'){showToast('🚫 تم حظر المستخدم');}
+  card.style.opacity='0.4';card.style.pointerEvents='none';
+}
+
+// ── CO-ADMINS ──
+async function addCoAdmin(){
+  const num=document.getElementById('new-admin-num').value.trim();
+  if(!num.startsWith('019')||num.length!==11){showToast('❌ رقم غير صحيح');return;}
+  if(!db){showToast('Firebase غير متصل');return;}
+  const perms={};
+  document.querySelectorAll('#new-perms .perm-sw').forEach((sw,i)=>{
+    const labels=['uploadQ','deleteMsgs','muteUsers','banUsers','sendNotifs','viewReports'];
+    perms[labels[i]]=sw.classList.contains('on');
+  });
+  const snap=await db.collection('users').where('platformNum','==',num).get();
+  if(snap.empty){showToast('❌ مفيش حساب بالرقم ده');return;}
+  const uid=snap.docs[0].id;
+  await db.collection('users').doc(uid).update({isCoAdmin:true,coAdminPerms:perms});
+  showToast('✅ تم إضافة المشرف');
+  document.getElementById('new-admin-num').value='';
+}
+
+function refreshStats(){loadStats();showToast('🔄 جاري التحديث...');}
+
+// ── INIT ──
+window.addEventListener('load',()=>{
+  if(auth){
+    auth.onAuthStateChanged(user=>{
+      currentUser=user;
+      if(!user){document.getElementById('access-denied').classList.add('show');return;}
+      if(user.email!==ADMIN_EMAIL){
+        // check co-admin
+        if(db){
+          db.collection('users').doc(user.uid).get().then(doc=>{
+            if(!doc.exists||(!doc.data().isCoAdmin&&user.email!==ADMIN_EMAIL)){
+              document.getElementById('access-denied').classList.add('show');
+            } else {loadStats();}
+          });
+        } else {document.getElementById('access-denied').classList.add('show');}
+      } else {loadStats();}
+    });
+  } else {document.getElementById('access-denied').classList.add('show');}
+});
+</script>
+</body>
+</html>

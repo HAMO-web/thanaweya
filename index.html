@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#06080f">
+<meta name="description" content="لمة الثانوية — أكبر منصة في مصر لطلاب الثانوية العامة والأزهرية دفعة 2026">
+<meta property="og:title" content="لمة الثانوية 2026">
+<meta property="og:description" content="أكبر منصة في مصر لطلاب الثانوية العامة والأزهرية — عداد الامتحانات، الجداول، الشات، والمذاكرة">
+<meta property="og:image" content="icon-512.png">
+<meta property="og:type" content="website">
+<title>لمة الثانوية 2026</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06080f;--bg2:#0a0e1a;--bg3:#0f1525;--card:#111827;--card2:#1a2240;
+  --blue:#3b82f6;--blue2:#60a5fa;--teal:#14b8a6;--teal2:#2dd4bf;
+  --purple:#8b5cf6;--purple2:#a78bfa;--gold:#f59e0b;--gold2:#fbbf24;
+  --green:#22c55e;--red:#ef4444;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--text4:#475569;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --r:12px;--r2:16px;--r3:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:70px}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 15%,rgba(59,130,246,0.07) 0%,transparent 50%),radial-gradient(ellipse at 85% 85%,rgba(20,184,166,0.07) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* ── Topbar ── */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(6,8,15,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;color:#fff;flex-shrink:0}
+.site-name{font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;color:var(--text)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.topbar-counters{display:flex;align-items:center;gap:8px}
+.tc{text-align:center}
+.tc-label{font-size:9px;color:var(--text3);display:block}
+.tc-num{font-size:14px;font-weight:700;font-family:'Cairo',sans-serif;display:block}
+.tc-num.blue{color:var(--blue2)}
+.tc-num.teal{color:var(--teal2)}
+.tc-divider{width:0.5px;height:28px;background:var(--border)}
+.icon-btn{width:36px;height:36px;border-radius:10px;background:var(--card);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background 0.2s}
+.icon-btn:hover{background:var(--card2)}
+.notif-badge{position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg)}
+.user-avatar{width:36px;height:36px;border-radius:50%;border:2px solid var(--blue);object-fit:cover;cursor:pointer;display:none}
+
+/* ── Hero ── */
+.hero{position:relative;z-index:1;padding:24px 16px 16px;text-align:center}
+.live-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(59,130,246,0.1);border:0.5px solid rgba(59,130,246,0.25);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--blue2);margin-bottom:12px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:livepulse 2s infinite}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.hero-title{font-family:'Cairo',sans-serif;font-size:clamp(24px,6vw,36px);font-weight:900;color:var(--text);line-height:1.2;margin-bottom:6px}
+.hero-title span{color:var(--blue2)}
+.hero-sub{font-size:13px;color:var(--text3);margin-bottom:6px}
+#live-clock{font-size:11px;color:var(--text4)}
+
+/* ── Counters ── */
+.section{position:relative;z-index:1;padding:0 14px;margin-bottom:16px}
+.section-label{font-size:11px;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.section-label span{font-size:10px;color:var(--blue2);cursor:pointer}
+.counters-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ccard{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:14px 12px;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s;cursor:pointer}
+.ccard:hover{transform:translateY(-2px);border-color:var(--border2)}
+.ccard::before{content:'';position:absolute;top:-40px;right:-40px;width:100px;height:100px;border-radius:50%;opacity:0.05}
+.ccard.blue::before{background:var(--blue)}
+.ccard.teal::before{background:var(--teal)}
+.ccard.gold::before{background:var(--gold)}
+.ccard.purple::before{background:var(--purple)}
+.ccard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.ccard-title{font-size:11px;color:var(--text2);font-weight:500}
+.ccard-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.ccard.blue .ccard-icon{background:rgba(59,130,246,0.12)}
+.ccard.teal .ccard-icon{background:rgba(20,184,166,0.12)}
+.ccard.gold .ccard-icon{background:rgba(245,158,11,0.12)}
+.ccard.purple .ccard-icon{background:rgba(139,92,246,0.12)}
+.ccard-num{font-family:'Cairo',sans-serif;font-size:clamp(36px,8vw,48px);font-weight:700;line-height:1;margin-bottom:3px}
+.ccard.blue .ccard-num{color:var(--blue2)}
+.ccard.teal .ccard-num{color:var(--teal2)}
+.ccard.gold .ccard-num{color:var(--gold2)}
+.ccard.purple .ccard-num{color:var(--purple2)}
+.ccard-sub{font-size:10px;color:var(--text3)}
+.hms-row{display:flex;gap:4px;margin:8px 0}
+.hms-box{flex:1;background:rgba(255,255,255,0.04);border-radius:6px;padding:4px;text-align:center}
+.hms-n{font-size:13px;font-weight:700;font-family:'Cairo',sans-serif}
+.ccard.blue .hms-n{color:var(--blue)}
+.ccard.teal .hms-n{color:var(--teal)}
+.ccard.gold .hms-n{color:var(--gold)}
+.ccard.purple .hms-n{color:var(--purple)}
+.hms-l{font-size:8px;color:var(--text4)}
+.prog-wrap{margin-top:6px}
+.prog-info{display:flex;justify-content:space-between;font-size:9px;color:var(--text4);margin-bottom:4px}
+.prog-bg{height:3px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.ccard.blue .prog-fill{background:linear-gradient(90deg,var(--blue),var(--blue2))}
+.ccard.teal .prog-fill{background:linear-gradient(90deg,var(--teal),var(--teal2))}
+.ccard.gold .prog-fill{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.ccard.purple .prog-fill{background:linear-gradient(90deg,var(--purple),var(--purple2))}
+
+/* ── Next exam ── */
+.next-exam{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(20,184,166,0.08));border:0.5px solid rgba(59,130,246,0.2);border-radius:var(--r2);padding:14px 16px;margin:0 14px 16px;position:relative;z-index:1}
+.ne-label{font-size:10px;color:var(--blue2);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.ne-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);animation:livepulse 2s infinite}
+.ne-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+.ne-date{font-size:11px;color:var(--text3)}
+
+/* ── Questions slider ── */
+.q-outer{overflow:hidden;padding:0 14px;margin-bottom:16px;position:relative;z-index:1}
+.q-track{display:flex;gap:10px;animation:slideQ 12s linear infinite}
+.q-track:hover{animation-play-state:paused}
+@keyframes slideQ{0%{transform:translateX(0)}50%{transform:translateX(calc(-50% - 5px))}100%{transform:translateX(0)}}
+.qcard{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:12px;min-width:200px;flex-shrink:0;cursor:pointer;transition:border-color 0.2s}
+.qcard:hover{border-color:var(--border2)}
+.qcard-subj{display:inline-block;font-size:9px;padding:2px 8px;border-radius:4px;margin-bottom:8px;font-weight:500}
+.qs-blue{background:rgba(59,130,246,0.12);color:var(--blue2)}
+.qs-teal{background:rgba(20,184,166,0.12);color:var(--teal2)}
+.qs-amber{background:rgba(245,158,11,0.12);color:var(--gold2)}
+.qs-purple{background:rgba(139,92,246,0.12);color:var(--purple2)}
+.qs-green{background:rgba(34,197,94,0.12);color:#4ade80}
+.qcard-txt{font-size:11px;color:var(--text);line-height:1.5;margin-bottom:8px}
+.qcard-footer{display:flex;align-items:center;justify-content:space-between}
+.qcard-show{font-size:9px;color:var(--blue2)}
+.qcard-diff{font-size:9px;padding:2px 6px;border-radius:4px}
+.d-easy{background:rgba(34,197,94,0.1);color:#4ade80}
+.d-med{background:rgba(245,158,11,0.1);color:var(--gold2)}
+.d-hard{background:rgba(239,68,68,0.1);color:#f87171}
+
+/* ── Chat preview ── */
+.chat-preview{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);margin:0 14px 16px;overflow:hidden;position:relative;z-index:1}
+.cp-head{padding:10px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cp-title{font-size:12px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px}
+.cp-online{font-size:10px;color:var(--green);display:flex;align-items:center;gap:3px}
+.cp-online-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:livepulse 2s infinite}
+.cp-msgs{padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.cp-msg{display:flex;gap:8px;align-items:flex-start}
+.cp-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+.cp-bubble{background:var(--card2);border-radius:10px;padding:7px 10px;max-width:calc(100% - 40px)}
+.cp-name{font-size:9px;color:var(--text3);margin-bottom:2px}
+.cp-text{font-size:11px;color:var(--text);line-height:1.4}
+.cp-more{text-align:center;padding:10px;font-size:11px;color:var(--blue2);border-top:0.5px solid var(--border);cursor:pointer}
+
+/* ── Announcement ── */
+.announcement{background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(59,130,246,0.08));border:0.5px solid rgba(139,92,246,0.2);border-radius:var(--r2);padding:14px 16px;margin:0 14px 16px;position:relative;z-index:1}
+.ann-label{font-size:10px;color:var(--purple2);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.ann-txt{font-size:12px;color:var(--text);line-height:1.6;margin-bottom:6px}
+.ann-author{font-size:10px;color:var(--text4)}
+.ann-author span{color:var(--gold2);font-weight:500}
+
+/* ── Brand footer ── */
+.brand-footer{padding:24px 16px;text-align:center;border-top:0.5px solid var(--border);position:relative;z-index:1;margin-top:8px}
+.bf-name{font-family:'Cairo',sans-serif;font-size:18px;font-weight:900;color:var(--text);margin-bottom:6px}
+.bf-name span{color:var(--blue2)}
+.bf-slogan{font-size:12px;color:var(--text3);line-height:1.8;margin-bottom:8px}
+.bf-stars{display:flex;justify-content:center;gap:4px;margin-bottom:8px}
+.bf-star{width:6px;height:6px;border-radius:50%;animation:starTwinkle 2s ease infinite}
+.bf-star:nth-child(1){background:var(--blue);animation-delay:0s}
+.bf-star:nth-child(2){background:var(--teal);animation-delay:0.3s}
+.bf-star:nth-child(3){background:var(--gold);animation-delay:0.6s}
+.bf-star:nth-child(4){background:var(--purple);animation-delay:0.9s}
+.bf-star:nth-child(5){background:var(--blue2);animation-delay:1.2s}
+@keyframes starTwinkle{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}
+.bf-dev{font-size:11px;color:var(--text4)}
+.bf-dev span{color:var(--purple2);font-weight:500}
+.bf-copy{font-size:10px;color:var(--text4);margin-top:4px;opacity:0.6}
+
+/* ── Notification popup ── */
+.notif-popup{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--card2);border:0.5px solid rgba(59,130,246,0.3);border-radius:var(--r2);padding:12px 16px;min-width:260px;max-width:320px;z-index:200;opacity:0;pointer-events:none;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.notif-popup.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all}
+.np-inner{display:flex;align-items:center;gap:10px}
+.np-icon{width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.np-txt{font-size:12px;color:var(--text);line-height:1.5}
+.np-close{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;flex-shrink:0}
+
+/* ── Bottom nav ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,26,0.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:0.5px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all 0.2s;text-decoration:none}
+.nav-item svg{width:22px;height:22px;transition:all 0.2s}
+.nav-item.active svg{stroke:var(--blue2)}
+.nav-item svg{stroke:var(--text4);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.nav-label{font-size:9px;color:var(--text4);transition:color 0.2s}
+.nav-item.active .nav-label{color:var(--blue2)}
+
+/* ── Login wall ── */
+#login-wall{display:none;position:fixed;inset:0;background:rgba(6,8,15,0.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+#login-wall.show{display:flex}
+.lw-logo{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-size:32px;font-weight:900;color:#fff;margin-bottom:16px;animation:popIn 0.6s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
+.lw-name{font-family:'Cairo',sans-serif;font-size:24px;font-weight:900;color:var(--text);margin-bottom:4px}
+.lw-name span{color:var(--blue2)}
+.lw-sub{font-size:13px;color:var(--text3);margin-bottom:28px;text-align:center;line-height:1.6}
+.lw-google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border-radius:14px;padding:14px 24px;width:100%;max-width:300px;cursor:pointer;border:none;transition:all 0.2s;margin-bottom:10px}
+.lw-google-btn:hover{background:#f1f5f9;transform:translateY(-1px)}
+.lw-google-txt{font-size:15px;font-weight:600;color:#1e293b;font-family:'Tajawal',sans-serif}
+.lw-terms{font-size:10px;color:var(--text4);text-align:center}
+.lw-skip{font-size:12px;color:var(--text3);margin-top:16px;cursor:pointer;text-decoration:underline}
+
+/* ── Loader ── */
+#loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s}
+#loader.hide{opacity:0;pointer-events:none}
+.loader-logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-size:28px;font-weight:900;color:#fff;margin-bottom:16px;animation:loaderPulse 1s ease infinite alternate}
+@keyframes loaderPulse{from{transform:scale(0.95)}to{transform:scale(1.05)}}
+.loader-txt{font-size:14px;color:var(--text3)}
+
+/* ── Animations ── */
+.fade-up{opacity:0;transform:translateY(20px);transition:all 0.6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ── Responsive desktop ── */
+@media(min-width:768px){
+  body{padding-bottom:0}
+  .bottom-nav{display:none}
+  .desktop-nav{display:flex!important}
+  .hero-title{font-size:48px}
+  .counters-grid{grid-template-columns:repeat(4,1fr)}
+  .section,.next-exam,.announcement,.chat-preview,.q-outer{max-width:860px;margin-left:auto;margin-right:auto}
+  .section{padding:0 24px}
+}
+.desktop-nav{display:none;position:fixed;top:0;left:0;right:0;background:rgba(6,8,15,0.95);backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);padding:12px 24px;align-items:center;justify-content:space-between;z-index:100}
+.dn-links{display:flex;gap:4px}
+.dn-link{padding:7px 14px;border-radius:8px;font-size:13px;color:var(--text3);cursor:pointer;transition:all 0.2s;border:none;background:transparent;font-family:'Tajawal',sans-serif}
+.dn-link:hover{background:var(--card);color:var(--text)}
+.dn-link.active{background:rgba(59,130,246,0.12);color:var(--blue2)}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo">ل</div>
+  <div class="loader-txt">لمة الثانوية...</div>
+</div>
+
+<div id="login-wall">
+  <div class="lw-logo">ل</div>
+  <div class="lw-name">لمة <span>الثانوية</span></div>
+  <div class="lw-sub">منصة دفعة 2026 🎯<br>سجل دخولك للوصول لكل المميزات</div>
+  <button class="lw-google-btn" onclick="signInWithGoogle()">
+    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    <div class="lw-google-txt">تسجيل الدخول بجوجل</div>
+  </button>
+  <div class="lw-terms">بالضغط توافق على شروط الاستخدام وسياسة الخصوصية</div>
+  <div class="lw-skip" onclick="skipLogin()">تصفح بدون تسجيل</div>
+</div>
+
+<div id="notif-popup" class="notif-popup">
+  <div class="np-inner">
+    <div class="np-icon">🔔</div>
+    <div class="np-txt" id="np-txt">إشعار جديد</div>
+    <div class="np-close" onclick="closeNotif()">✕</div>
+  </div>
+</div>
+
+<!-- Desktop nav -->
+<nav class="desktop-nav">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="logo">ل</div>
+    <span style="font-family:'Cairo',sans-serif;font-size:16px;font-weight:700">لمة الثانوية</span>
+  </div>
+  <div class="dn-links">
+    <button class="dn-link active">الرئيسية</button>
+    <button class="dn-link" onclick="location.href='schedule.html'">الجداول</button>
+    <button class="dn-link" onclick="location.href='chat.html'">المحادثات</button>
+    <button class="dn-link" onclick="location.href='study.html'">الدراسة</button>
+    <button class="dn-link" onclick="location.href='profile.html'">بروفايلي</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="icon-btn" onclick="toggleNotifs()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <div class="notif-badge" id="notif-badge" style="display:none"></div>
+    </div>
+    <img id="user-avatar-top" class="user-avatar" alt="" onclick="location.href='profile.html'">
+    <button id="login-btn-top" onclick="showLoginWall()" style="background:rgba(59,130,246,0.12);border:0.5px solid rgba(59,130,246,0.25);border-radius:8px;padding:7px 14px;font-size:12px;color:var(--blue2);cursor:pointer;font-family:'Tajawal',sans-serif">دخول</button>
+  </div>
+</nav>
+
+<!-- Mobile topbar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">ل</div>
+    <div class="site-name">لمة الثانوية</div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-counters">
+      <div class="tc"><span class="tc-label">ثانوية</span><span class="tc-num blue" id="th-top">—</span></div>
+      <div class="tc-divider"></div>
+      <div class="tc"><span class="tc-label">أزهرية</span><span class="tc-num teal" id="az-top">—</span></div>
+    </div>
+    <div class="icon-btn" onclick="toggleNotifs()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <div class="notif-badge" id="notif-badge2" style="display:none"></div>
+    </div>
+    <img id="user-avatar-mob" class="user-avatar" alt="" onclick="location.href='profile.html'">
+    <div id="login-btn-mob" onclick="showLoginWall()" style="background:rgba(59,130,246,0.12);border:0.5px solid rgba(59,130,246,0.25);border-radius:8px;padding:6px 10px;font-size:11px;color:var(--blue2);cursor:pointer">دخول</div>
+  </div>
+</div>
+
+<main>
+  <!-- Hero -->
+  <div class="hero fade-up">
+    <div class="live-badge"><div class="live-dot"></div>مباشر — يتحدث كل ثانية</div>
+    <h1 class="hero-title">امتحاناتك <span>تقرب</span> 🎯</h1>
+    <p class="hero-sub">الثانوية العامة والأزهرية — دور أول 2026</p>
+    <p id="live-clock">—</p>
+  </div>
+
+  <!-- Counters -->
+  <div class="section fade-up">
+    <div class="section-label"><span style="color:var(--text2);font-weight:500">العدادات الرئيسية</span></div>
+    <div class="counters-grid">
+      <div class="ccard blue">
+        <div class="ccard-top"><div class="ccard-title">ثانوية عامة</div><div class="ccard-icon">📚</div></div>
+        <div class="ccard-num" id="th-d">—</div>
+        <div class="ccard-sub">يوم — تبدأ 21 يونيو</div>
+        <div class="hms-row">
+          <div class="hms-box"><div class="hms-n" id="th-h">—</div><div class="hms-l">ساعة</div></div>
+          <div class="hms-box"><div class="hms-n" id="th-m">—</div><div class="hms-l">دقيقة</div></div>
+          <div class="hms-box"><div class="hms-n" id="th-s">—</div><div class="hms-l">ثانية</div></div>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-info"><span id="th-pct">0%</span><span>آخر امتحان 16/7</span></div>
+          <div class="prog-bg"><div class="prog-fill" id="th-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="ccard teal">
+        <div class="ccard-top"><div class="ccard-title">أزهرية علمي</div><div class="ccard-icon">🕌</div></div>
+        <div class="ccard-num" id="az-d">—</div>
+        <div class="ccard-sub">يوم — تبدأ 6 يونيو</div>
+        <div class="hms-row">
+          <div class="hms-box"><div class="hms-n" id="az-h">—</div><div class="hms-l">ساعة</div></div>
+          <div class="hms-box"><div class="hms-n" id="az-m">—</div><div class="hms-l">دقيقة</div></div>
+          <div class="hms-box"><div class="hms-n" id="az-s">—</div><div class="hms-l">ثانية</div></div>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-info"><span id="az-pct">0%</span><span>آخر امتحان 8/7</span></div>
+          <div class="prog-bg"><div class="prog-fill" id="az-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="ccard gold">
+        <div class="ccard-top"><div class="ccard-title">نهاية الامتحانات</div><div class="ccard-icon">🏁</div></div>
+        <div class="ccard-num" id="end-d">—</div>
+        <div class="ccard-sub">يوم — 16 يوليو 2026</div>
+        <div class="prog-wrap">
+          <div class="prog-info"><span id="end-pct">0%</span><span>من 1/8/2025</span></div>
+          <div class="prog-bg"><div class="prog-fill" id="end-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="ccard purple">
+        <div class="ccard-top"><div class="ccard-title">بداية الجامعة 🎓</div><div class="ccard-icon">🏛️</div></div>
+        <div class="ccard-num" id="univ-d">—</div>
+        <div class="ccard-sub">يوم — 19 سبتمبر 2026</div>
+        <div class="prog-wrap">
+          <div class="prog-info"><span id="univ-pct">0%</span><span>الجامعات المصرية</span></div>
+          <div class="prog-bg"><div class="prog-fill" id="univ-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next exam -->
+  <div class="next-exam fade-up">
+    <div class="ne-label"><div class="ne-dot"></div>أقرب امتحان</div>
+    <div class="ne-name" id="next-name">القرآن الكريم والحديث 🕌</div>
+    <div class="ne-date" id="next-date">السبت 6 يونيو 2026</div>
+  </div>
+
+  <!-- Questions -->
+  <div class="section fade-up">
+    <div class="section-label">
+      <span style="color:var(--text2);font-weight:500">📝 سؤال اليوم</span>
+      <span onclick="location.href='study.html'">شوف الكل ←</span>
+    </div>
+  </div>
+  <div class="q-outer fade-up">
+    <div class="q-track" id="q-track">
+      <div class="qcard"><span class="qcard-subj qs-blue">كيمياء</span><div class="qcard-txt">ما هو العدد الذري للكربون في الجدول الدوري؟</div><div class="qcard-footer"><span class="qcard-show">اظهر الإجابة</span><span class="qcard-diff d-easy">سهل</span></div></div>
+      <div class="qcard"><span class="qcard-subj qs-teal">فيزياء</span><div class="qcard-txt">ما هي وحدة قياس الشغل في النظام الدولي؟</div><div class="qcard-footer"><span class="qcard-show">اظهر الإجابة</span><span class="qcard-diff d-med">متوسط</span></div></div>
+      <div class="qcard"><span class="qcard-subj qs-amber">رياضيات</span><div class="qcard-txt">ما هي قيمة sin(90°)؟</div><div class="qcard-footer"><span class="qcard-show">اظهر الإجابة</span><span class="qcard-diff d-easy">سهل</span></div></div>
+      <div class="qcard"><span class="qcard-subj qs-purple">أحياء</span><div class="qcard-txt">أين تتم عملية البناء الضوئي في الخلية النباتية؟</div><div class="qcard-footer"><span class="qcard-show">اظهر الإجابة</span><span class="qcard-diff d-hard">صعب</span></div></div>
+      <div class="qcard"><span class="qcard-subj qs-green">نحو</span><div class="qcard-txt">ما إعراب كلمة "الطالبُ" في جملة "جاء الطالبُ"؟</div><div class="qcard-footer"><span class="qcard-show">اظهر الإجابة</span><span class="qcard-diff d-easy">سهل</span></div></div>
+    </div>
+  </div>
+
+  <!-- Chat preview -->
+  <div class="section fade-up" style="margin-bottom:8px">
+    <div class="section-label">
+      <span style="color:var(--text2);font-weight:500">💬 لمة الدفعة</span>
+      <span onclick="location.href='chat.html'">افتح الشات ←</span>
+    </div>
+  </div>
+  <div class="chat-preview fade-up">
+    <div class="cp-head">
+      <div class="cp-title">💬 شات الدفعة 2026</div>
+      <div class="cp-online"><div class="cp-online-dot"></div><span id="online-count">312 أونلاين</span></div>
+    </div>
+    <div class="cp-msgs">
+      <div class="cp-msg"><div class="cp-av" style="background:#1d4ed8">م</div><div class="cp-bubble"><div class="cp-name">محمد — 3 ثانوي علمي علوم</div><div class="cp-text">يلا نذاكر مع بعض 💪🔥</div></div></div>
+      <div class="cp-msg"><div class="cp-av" style="background:#0f766e">أ</div><div class="cp-bubble"><div class="cp-name">أحمد — 3 أزهر علمي</div><div class="cp-text">احنا 48 يوم بس 😂 أقرب منكم</div></div></div>
+      <div class="cp-msg"><div class="cp-av" style="background:#b45309">س</div><div class="cp-bubble"><div class="cp-name">سارة — 3 ثانوي أدبي</div><div class="cp-text">مش مذاكرة خالص 😅</div></div></div>
+    </div>
+    <div class="cp-more" onclick="location.href='chat.html'">اكتب رسالة في الشات ←</div>
+  </div>
+
+  <!-- Announcement -->
+  <div class="section fade-up" style="margin-bottom:8px">
+    <div class="section-label"><span style="color:var(--text2);font-weight:500">📢 إعلان المطور</span></div>
+  </div>
+  <div class="announcement fade-up">
+    <div class="ann-label">📢 إعلان رسمي</div>
+    <div class="ann-txt">أهلاً يا طلاب دفعة 2026! منصة لمة الثانوية متاحة دلوقتي لجميع طلاب الثانوية العامة والأزهرية. شاركوا الرابط مع زملائكم وبالتوفيق للجميع 💪🎯</div>
+    <div class="ann-author">بواسطة <span>HAMO — محمد العوضي شاهين</span> ✓</div>
+  </div>
+
+  <!-- Brand footer -->
+  <div class="brand-footer fade-up">
+    <div class="bf-name">لمة <span>الثانوية</span></div>
+    <div class="bf-stars">
+      <div class="bf-star"></div><div class="bf-star"></div><div class="bf-star"></div><div class="bf-star"></div><div class="bf-star"></div>
+    </div>
+    <div class="bf-slogan">أكبر منصة في مصر لطلاب الثانوية العامة والأزهرية 🇪🇬<br>المنصة الأولى والأشمل لدفعة 2026<br>عداد الامتحانات • الجداول • الشات • المذاكرة</div>
+    <div class="bf-dev">تطوير وتصميم <span>HAMO — محمد العوضي شاهين</span></div>
+    <div class="bf-copy">© 2026 لمة الثانوية — جميع الحقوق محفوظة</div>
+  </div>
+</main>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a class="nav-item active" href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    <span class="nav-label">الرئيسية</span>
+  </a>
+  <a class="nav-item" href="schedule.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span class="nav-label">الجداول</span>
+  </a>
+  <a class="nav-item" href="chat.html">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <span class="nav-label">المحادثات</span>
+  </a>
+  <a class="nav-item" href="study.html">
+    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="nav-label">الدراسة</span>
+  </a>
+  <a class="nav-item" href="profile.html">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span class="nav-label">بروفايلي</span>
+  </a>
+</nav>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script>
+const FIREBASE_CONFIG={apiKey:"AIzaSyDZYPoS67TFo__Bb7ysANV97hRMXCGH8pw",authDomain:"thanaweya-2026.firebaseapp.com",projectId:"thanaweya-2026",storageBucket:"thanaweya-2026.firebasestorage.app",messagingSenderId:"598643977703",appId:"1:598643977703:web:3fbe9c9fbf40574b0fe142",measurementId:"G-MZJRT3QWYP"};
+const ADMIN_EMAIL="alawadi7760@gmail.com";
+const START=new Date('2025-08-01T00:00:00');
+const TH_START=new Date('2026-06-21T09:00:00');
+const TH_END=new Date('2026-07-16T12:00:00');
+const AZ_START=new Date('2026-06-06T09:00:00');
+const AZ_END=new Date('2026-07-08T11:00:00');
+const UNIV=new Date('2026-09-19T09:00:00');
+
+let db,auth,currentUser=null;
+try{firebase.initializeApp(FIREBASE_CONFIG);auth=firebase.auth();db=firebase.firestore();}catch(e){}
+
+function calc(target,start){
+  const now=new Date();
+  const diff=Math.max(0,target-now);
+  const total=target-start;
+  const passed=now-start;
+  const pct=Math.max(0,Math.min(100,Math.round((passed/total)*100)));
+  return{d:Math.floor(diff/86400000),h:Math.floor((diff%86400000)/3600000),m:Math.floor((diff%3600000)/60000),s:Math.floor((diff%60000)/1000),pct};
+}
+
+function set(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+
+function tick(){
+  const now=new Date();
+  set('live-clock',now.toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+' — '+now.toLocaleTimeString('ar-EG'));
+  const th=calc(TH_START,START);
+  set('th-d',th.d);set('th-h',th.h);set('th-m',th.m);set('th-s',th.s);set('th-pct',th.pct+'%');set('th-top',th.d);
+  const bar=document.getElementById('th-bar');if(bar)bar.style.width=th.pct+'%';
+  const az=calc(AZ_START,START);
+  set('az-d',az.d);set('az-h',az.h);set('az-m',az.m);set('az-s',az.s);set('az-pct',az.pct+'%');set('az-top',az.d);
+  const azbar=document.getElementById('az-bar');if(azbar)azbar.style.width=az.pct+'%';
+  const en=calc(TH_END,START);
+  set('end-d',en.d);set('end-pct',en.pct+'%');
+  const enbar=document.getElementById('end-bar');if(enbar)enbar.style.width=en.pct+'%';
+  const un=calc(UNIV,START);
+  set('univ-d',un.d);set('univ-pct',un.pct+'%');
+  const unbar=document.getElementById('univ-bar');if(unbar)unbar.style.width=un.pct+'%';
+}
+
+function showLoginWall(){document.getElementById('login-wall').classList.add('show')}
+function skipLogin(){document.getElementById('login-wall').classList.remove('show')}
+
+async function signInWithGoogle(){
+  if(!auth){showNotif('Firebase غير مُعدّ بعد');return;}
+  try{const p=new firebase.auth.GoogleAuthProvider();await auth.signInWithPopup(p);}
+  catch(e){showNotif('فشل تسجيل الدخول');}
+}
+
+function onAuthChange(user){
+  currentUser=user;
+  const av1=document.getElementById('user-avatar-top');
+  const av2=document.getElementById('user-avatar-mob');
+  const lb1=document.getElementById('login-btn-top');
+  const lb2=document.getElementById('login-btn-mob');
+  if(user){
+    if(av1){av1.src=user.photoURL||'';av1.style.display='block';}
+    if(av2){av2.src=user.photoURL||'';av2.style.display='block';}
+    if(lb1)lb1.style.display='none';
+    if(lb2)lb2.style.display='none';
+    document.getElementById('login-wall').classList.remove('show');
+    checkProfile(user);
+  } else {
+    if(av1)av1.style.display='none';
+    if(av2)av2.style.display='none';
+    if(lb1)lb1.style.display='';
+    if(lb2)lb2.style.display='';
+  }
+}
+
+async function checkProfile(user){
+  if(!db)return;
+  try{
+    const doc=await db.collection('users').doc(user.uid).get();
+    if(!doc.exists||!doc.data().fullName){
+      location.href='register.html';
+    }
+  }catch(e){}
+}
+
+function showNotif(msg){
+  const p=document.getElementById('notif-popup');
+  document.getElementById('np-txt').textContent=msg;
+  p.classList.add('show');
+  setTimeout(()=>p.classList.remove('show'),4000);
+}
+function closeNotif(){document.getElementById('notif-popup').classList.remove('show')}
+function toggleNotifs(){}
+
+function animateFadeUp(){
+  document.querySelectorAll('.fade-up').forEach(el=>{
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+    },{threshold:0.1});
+    obs.observe(el);
+  });
+}
+
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('loader').classList.add('hide'),1000);
+  tick();
+  setInterval(tick,1000);
+  animateFadeUp();
+  if(auth)auth.onAuthStateChanged(onAuthChange);
+  setTimeout(()=>showNotif('أهلاً بك في لمة الثانوية 🎯'),2000);
+});
+</script>
+</body>
+</html>

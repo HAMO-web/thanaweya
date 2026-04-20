@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#06080f">
+<title>بروفايلي — لمة الثانوية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06080f;--bg2:#0a0e1a;--bg3:#0f1525;--card:#111827;--card2:#1a2240;--card3:#1e2a4a;
+  --blue:#3b82f6;--blue2:#60a5fa;--teal:#14b8a6;--teal2:#2dd4bf;
+  --purple:#8b5cf6;--purple2:#a78bfa;--gold:#f59e0b;--gold2:#fbbf24;
+  --green:#22c55e;--red:#ef4444;--rose:#f43f5e;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--text4:#475569;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --r:12px;--r2:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(59,130,246,0.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(20,184,166,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(6,8,15,0.92);backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{font-family:'Cairo',sans-serif;font-size:16px;font-weight:700}
+.icon-btn{width:36px;height:36px;border-radius:10px;background:var(--card);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s}
+.icon-btn:hover{background:var(--card2)}
+.icon-btn svg{width:18px;height:18px;stroke:var(--text2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* cover + avatar */
+.cover-wrap{position:relative;z-index:1;height:120px;background:linear-gradient(135deg,#1a2240,#0f1525);overflow:hidden;cursor:pointer}
+.cover-img{width:100%;height:100%;object-fit:cover}
+.cover-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);opacity:0;transition:opacity 0.2s}
+.cover-wrap:hover .cover-overlay{opacity:1}
+.cover-edit-hint{font-size:12px;color:#fff;display:flex;align-items:center;gap:6px}
+.cover-gradient{position:absolute;inset:0;background:linear-gradient(135deg,rgba(59,130,246,0.3),rgba(20,184,166,0.2),rgba(139,92,246,0.2))}
+
+.avatar-area{position:relative;z-index:2;padding:0 16px;margin-top:-44px;display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px}
+.avatar-wrap{position:relative}
+.avatar{width:88px;height:88px;border-radius:50%;border:4px solid var(--bg);background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;font-family:'Cairo',sans-serif;color:#fff;overflow:hidden;cursor:pointer}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.avatar-edit{position:absolute;bottom:4px;right:0;width:26px;height:26px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);cursor:pointer}
+.avatar-edit svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.edit-profile-btn{padding:8px 16px;border-radius:10px;background:transparent;border:0.5px solid var(--border2);color:var(--text);font-family:'Tajawal',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+.edit-profile-btn:hover{background:var(--card2)}
+.edit-profile-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* profile info */
+.profile-info{padding:0 16px 16px;position:relative;z-index:1}
+.pname{font-family:'Cairo',sans-serif;font-size:20px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:6px}
+.pbio{font-size:13px;color:var(--text2);margin-bottom:8px;line-height:1.5}
+.ptags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.ptag{font-size:10px;padding:3px 10px;border-radius:6px;font-weight:500}
+.ptag.blue{background:rgba(59,130,246,0.12);color:var(--blue2);border:0.5px solid rgba(59,130,246,0.2)}
+.ptag.teal{background:rgba(20,184,166,0.12);color:var(--teal2);border:0.5px solid rgba(20,184,166,0.2)}
+.ptag.gold{background:rgba(245,158,11,0.12);color:var(--gold2);border:0.5px solid rgba(245,158,11,0.2)}
+.ptag.purple{background:rgba(139,92,246,0.12);color:var(--purple2);border:0.5px solid rgba(139,92,246,0.2)}
+
+/* contact num */
+.pnum-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.pnum{font-size:12px;color:var(--text3);font-family:monospace;letter-spacing:0.5px}
+.copy-btn{padding:3px 10px;border-radius:6px;background:rgba(59,130,246,0.1);color:var(--blue2);font-size:10px;border:0.5px solid rgba(59,130,246,0.2);cursor:pointer;font-family:'Tajawal',sans-serif}
+
+/* status toggle */
+.status-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.status-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:10px;border:0.5px solid var(--border);background:var(--card);font-size:11px;cursor:pointer;transition:all 0.2s;font-family:'Tajawal',sans-serif;color:var(--text2)}
+.status-btn.active-online{border-color:rgba(34,197,94,0.35);background:rgba(34,197,94,0.08);color:var(--green)}
+.status-btn.active-dnd{border-color:rgba(239,68,68,0.35);background:rgba(239,68,68,0.08);color:var(--red)}
+.sdot{width:8px;height:8px;border-radius:50%}
+
+/* stats */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:0 16px 16px;background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);overflow:hidden;position:relative;z-index:1}
+.stat-item{padding:14px;text-align:center;border-left:0.5px solid var(--border)}
+.stat-item:last-child{border-left:none}
+.stat-n{font-family:'Cairo',sans-serif;font-size:22px;font-weight:700;color:var(--blue2)}
+.stat-l{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* sections */
+.section{padding:0 16px;margin-bottom:16px;position:relative;z-index:1}
+.sec-title{font-size:12px;color:var(--text3);letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.sec-title::after{content:'';flex:1;height:0.5px;background:var(--border)}
+
+.field-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);overflow:hidden;margin-bottom:8px}
+.field-item{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border)}
+.field-item:last-child{border-bottom:none}
+.fi-left{display:flex;align-items:center;gap:10px}
+.fi-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.fi-icon.blue{background:rgba(59,130,246,0.12)}
+.fi-icon.teal{background:rgba(20,184,166,0.12)}
+.fi-icon.gold{background:rgba(245,158,11,0.12)}
+.fi-icon.purple{background:rgba(139,92,246,0.12)}
+.fi-icon.red{background:rgba(239,68,68,0.12)}
+.fi-label{font-size:10px;color:var(--text3);margin-bottom:2px}
+.fi-val{font-size:13px;color:var(--text)}
+.fi-action{font-size:11px;color:var(--blue2);cursor:pointer;padding:4px 8px;border-radius:6px;background:rgba(59,130,246,0.08);border:0.5px solid rgba(59,130,246,0.15)}
+.fi-action:hover{background:rgba(59,130,246,0.15)}
+.fi-locked{font-size:11px;color:var(--text4);display:flex;align-items:center;gap:3px}
+.fi-locked svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* install app */
+.install-card{margin:0 16px 16px;background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(20,184,166,0.08));border:0.5px solid rgba(59,130,246,0.2);border-radius:var(--r2);padding:16px;position:relative;z-index:1;cursor:pointer;transition:border-color 0.2s}
+.install-card:hover{border-color:rgba(59,130,246,0.35)}
+.ic-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ic-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Cairo',sans-serif;font-size:18px;font-weight:900;color:#fff}
+.ic-name{font-size:15px;font-weight:700}
+.ic-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.ic-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.ic-btn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:600;font-family:'Tajawal',sans-serif;border:none;cursor:pointer;transition:opacity 0.2s}
+.ic-btn:hover{opacity:0.9}
+.ic-btn svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* logout */
+.logout-btn{margin:0 16px 16px;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--r2);background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.2);color:var(--red);font-size:13px;font-weight:500;cursor:pointer;font-family:'Tajawal',sans-serif;transition:all 0.2s;position:relative;z-index:1}
+.logout-btn:hover{background:rgba(239,68,68,0.14)}
+.logout-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,26,0.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:0.5px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all 0.2s;text-decoration:none}
+.nav-item svg{width:22px;height:22px;stroke:var(--text4);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.2s}
+.nav-item.active svg{stroke:var(--blue2)}
+.nav-label{font-size:9px;color:var(--text4);transition:color 0.2s}
+.nav-item.active .nav-label{color:var(--blue2)}
+.nav-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--red);position:absolute;top:8px;right:8px;border:1.5px solid var(--bg)}
+
+/* edit modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:300;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-sheet{background:var(--bg2);border-radius:20px 20px 0 0;border:0.5px solid var(--border2);border-bottom:none;width:100%;max-width:480px;padding:20px;max-height:88vh;overflow-y:auto;animation:sheetUp 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 16px}
+.sheet-title{font-size:16px;font-weight:700;margin-bottom:4px;font-family:'Cairo',sans-serif}
+.sheet-sub{font-size:12px;color:var(--text3);margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:11px;color:var(--text2);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.form-label .req{color:var(--red);font-size:10px}
+.form-label .opt{color:var(--text4);font-size:10px}
+.form-input{width:100%;background:var(--card2);border:0.5px solid var(--border2);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:rgba(59,130,246,0.4)}
+.form-input::placeholder{color:var(--text4)}
+.form-input:disabled{opacity:0.5;cursor:not-allowed}
+.form-hint{font-size:10px;color:var(--text4);margin-top:4px;display:flex;align-items:center;gap:3px}
+.form-hint svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2}
+textarea.form-input{resize:none;min-height:72px}
+.form-btn{width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--teal));border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;transition:opacity 0.2s}
+.form-btn:hover{opacity:0.92}
+
+/* toast */
+#toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card3);border:0.5px solid var(--border2);border-radius:12px;padding:10px 18px;font-size:13px;color:var(--text);opacity:0;transition:all 0.3s;z-index:500;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,0.4);pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* install popup */
+#install-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);z-index:400;align-items:center;justify-content:center;padding:20px}
+#install-popup.show{display:flex}
+.ip-box{background:var(--bg2);border:0.5px solid var(--border2);border-radius:20px;padding:24px;max-width:360px;width:100%;text-align:center}
+.ip-icon{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--blue),var(--teal));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff;font-family:'Cairo',sans-serif;margin:0 auto 16px}
+.ip-title{font-size:18px;font-weight:700;font-family:'Cairo',sans-serif;margin-bottom:8px}
+.ip-steps{text-align:right;background:var(--card);border-radius:12px;padding:14px;margin:14px 0}
+.ip-step{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;color:var(--text2)}
+.ip-step:last-child{margin-bottom:0}
+.ip-step-num{width:22px;height:22px;border-radius:50%;background:rgba(59,130,246,0.15);color:var(--blue2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ip-close{width:100%;padding:11px;border-radius:12px;background:var(--card2);border:0.5px solid var(--border);color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;cursor:pointer;margin-top:4px}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- Install popup -->
+<div id="install-popup">
+  <div class="ip-box">
+    <div class="ip-icon">ل</div>
+    <div class="ip-title">تثبيت لمة الثانوية</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.6">ضيف المنصة على شاشتك الرئيسية عشان تفتحها بسرعة زي أي تطبيق!</div>
+    <div class="ip-steps">
+      <div class="ip-step"><div class="ip-step-num">1</div><span>على Chrome: اضغط ⋮ (القائمة)</span></div>
+      <div class="ip-step"><div class="ip-step-num">2</div><span>اختار "إضافة إلى الشاشة الرئيسية"</span></div>
+      <div class="ip-step"><div class="ip-step-num">3</div><span>اضغط "إضافة" وخلاص! 🎉</span></div>
+      <div class="ip-step" style="margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border)"><div class="ip-step-num">📱</div><span>على Safari (iPhone): اضغط ↑ ثم "Add to Home Screen"</span></div>
+    </div>
+    <button class="ip-close" onclick="document.getElementById('install-popup').classList.remove('show')">حسناً فهمت ✓</button>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal-overlay" id="edit-modal" onclick="closeModal(event,'edit-modal')">
+  <div class="modal-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">تعديل البروفايل ✏️</div>
+    <div class="sheet-sub">عدّل بياناتك اللي عايز تغيرها</div>
+    <div class="form-group">
+      <div class="form-label">صورة البروفايل <span class="opt">(اختياري)</span></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="photo-preview" style="width:52px;height:52px;border-radius:50%;background:var(--card2);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;overflow:hidden;flex-shrink:0" id="edit-av-preview">م</div>
+        <label style="flex:1;padding:10px 12px;background:var(--card2);border:0.5px solid var(--border2);border-radius:10px;font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          اختار صورة
+          <input type="file" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">الاسم الثلاثي <span class="req">* اجباري</span></div>
+      <input class="form-input" id="edit-name" type="text" placeholder="اسمك الثلاثي كامل">
+    </div>
+    <div class="form-group">
+      <div class="form-label">الإيميل <span class="opt">(غير قابل للتعديل)</span></div>
+      <input class="form-input" id="edit-email" type="email" disabled>
+      <div class="form-hint"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> لا يمكن تغيير الإيميل</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">رقم الهاتف <span class="opt">(اختياري — لن يظهر لأحد)</span></div>
+      <input class="form-input" id="edit-phone" type="tel" placeholder="01xxxxxxxxx" maxlength="11">
+      <div class="form-hint"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> رقمك الحقيقي خاص بيك بس</div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">اللقب <span class="opt">(اختياري — يظهر في الشات)</span></div>
+      <input class="form-input" id="edit-nickname" type="text" placeholder="لقبك المميز">
+    </div>
+    <div class="form-group">
+      <div class="form-label">وصف / حالة <span class="opt">(اختياري)</span></div>
+      <textarea class="form-input" id="edit-bio" placeholder="اكتب حاجة عن نفسك..."></textarea>
+    </div>
+    <button class="form-btn" onclick="saveProfile()">💾 حفظ التعديلات</button>
+  </div>
+</div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="icon-btn" onclick="history.back()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <span class="topbar-title">بروفايلي</span>
+  </div>
+  <div style="display:flex;gap:6px">
+    <div class="icon-btn" id="settings-btn" onclick="openModal('edit-modal')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- Cover -->
+<div class="cover-wrap" onclick="changeCover()">
+  <div class="cover-gradient" id="cover-display"></div>
+  <div class="cover-overlay">
+    <div class="cover-edit-hint">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      تغيير صورة الغلاف
+    </div>
+  </div>
+  <input type="file" id="cover-input" accept="image/*" style="display:none" onchange="loadCover(this)">
+</div>
+
+<!-- Avatar + edit btn -->
+<div class="avatar-area">
+  <div class="avatar-wrap">
+    <div class="avatar" id="main-avatar" onclick="openModal('edit-modal')">م</div>
+    <div class="avatar-edit" onclick="openModal('edit-modal')">
+      <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </div>
+  </div>
+  <button class="edit-profile-btn" onclick="openModal('edit-modal')">
+    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    تعديل البروفايل
+  </button>
+</div>
+
+<!-- Profile info -->
+<div class="profile-info">
+  <div class="pname">
+    <span id="display-name">محمد العوضي شاهين</span>
+  </div>
+  <div class="pbio" id="display-bio">طالب في السنة الثالثة — يستعد للقمة 🎯</div>
+  <div class="ptags" id="display-tags">
+    <span class="ptag blue">ثالثة ثانوي</span>
+    <span class="ptag teal">أزهري علمي</span>
+    <span class="ptag gold">علوم</span>
+  </div>
+  <div class="pnum-row">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+    <span class="pnum" id="display-num">#رقم التواصل: 01912345678</span>
+    <button class="copy-btn" onclick="copyNum()">نسخ</button>
+  </div>
+  <div class="status-row">
+    <button class="status-btn active-online" id="status-online" onclick="setStatus('online')">
+      <div class="sdot" style="background:var(--green)"></div> متاح
+    </button>
+    <button class="status-btn" id="status-dnd" onclick="setStatus('dnd')">
+      <div class="sdot" style="background:var(--red)"></div> مشغول
+    </button>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-item"><div class="stat-n" id="stat-msgs">148</div><div class="stat-l">رسالة</div></div>
+  <div class="stat-item"><div class="stat-n" id="stat-days">23</div><div class="stat-l">يوم نشاط</div></div>
+  <div class="stat-item"><div class="stat-n" id="stat-rank">#7</div><div class="stat-l">ليدربورد</div></div>
+</div>
+
+<!-- My info -->
+<div class="section">
+  <div class="sec-title">معلوماتي</div>
+  <div class="field-card">
+    <div class="field-item">
+      <div class="fi-left">
+        <div class="fi-icon blue">👤</div>
+        <div><div class="fi-label">الاسم الثلاثي</div><div class="fi-val" id="fi-name">محمد العوضي شاهين</div></div>
+      </div>
+      <div class="fi-action" onclick="openModal('edit-modal')">تعديل</div>
+    </div>
+    <div class="field-item">
+      <div class="fi-left">
+        <div class="fi-icon teal">🏫</div>
+        <div><div class="fi-label">الصف الدراسي</div><div class="fi-val" id="fi-grade">ثالثة ثانوي أزهري علمي</div></div>
+      </div>
+      <div class="fi-locked"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> ثابت</div>
+    </div>
+    <div class="field-item">
+      <div class="fi-left">
+        <div class="fi-icon gold">📱</div>
+        <div><div class="fi-label">رقم التواصل على المنصة</div><div class="fi-val" id="fi-pnum" style="font-family:monospace">01912345678</div></div>
+      </div>
+      <div id="pnum-change-btn" class="fi-action" onclick="changePlatformNum()">تغيير</div>
+    </div>
+    <div class="field-item">
+      <div class="fi-left">
+        <div class="fi-icon purple">✏️</div>
+        <div><div class="fi-label">اللقب</div><div class="fi-val" id="fi-nickname">—</div></div>
+      </div>
+      <div class="fi-action" onclick="openModal('edit-modal')">تعديل</div>
+    </div>
+    <div class="field-item">
+      <div class="fi-left">
+        <div class="fi-icon blue">📧</div>
+        <div><div class="fi-label">الإيميل (خاص)</div><div class="fi-val" id="fi-email">—</div></div>
+      </div>
+      <div class="fi-locked"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> خاص</div>
+    </div>
+  </div>
+</div>
+
+<!-- App section -->
+<div class="install-card" onclick="showInstall()">
+  <div class="ic-top">
+    <div class="ic-icon">ل</div>
+    <div>
+      <div class="ic-name">تطبيق لمة الثانوية</div>
+      <div class="ic-sub">أضفه لشاشتك الرئيسية مجاناً</div>
+    </div>
+  </div>
+  <div class="ic-desc">افتح المنصة بسرعة زي أي تطبيق على موبايلك — بدون متجر وبدون تنزيل! 🚀</div>
+  <button class="ic-btn">
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    تثبيت على الشاشة الرئيسية
+  </button>
+</div>
+
+<!-- Logout -->
+<div class="logout-btn" onclick="doLogout()">
+  <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  تسجيل الخروج
+</div>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    <span class="nav-label">الرئيسية</span>
+  </a>
+  <a class="nav-item" href="schedule.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span class="nav-label">الجداول</span>
+  </a>
+  <a class="nav-item" href="chat.html">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <span class="nav-label">المحادثات</span>
+  </a>
+  <a class="nav-item" href="study.html">
+    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="nav-label">الدراسة</span>
+  </a>
+  <a class="nav-item active" href="profile.html">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span class="nav-label">بروفايلي</span>
+  </a>
+</nav>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage-compat.js"></script>
+<script>
+const FIREBASE_CONFIG={apiKey:"AIzaSyDZYPoS67TFo__Bb7ysANV97hRMXCGH8pw",authDomain:"thanaweya-2026.firebaseapp.com",projectId:"thanaweya-2026",storageBucket:"thanaweya-2026.firebasestorage.app",messagingSenderId:"598643977703",appId:"1:598643977703:web:3fbe9c9fbf40574b0fe142"};
+const ADMIN_EMAIL="alawadi7760@gmail.com";
+let db,auth,storage,currentUser=null,userData=null,photoFile=null,pnumLastChanged=null;
+try{firebase.initializeApp(FIREBASE_CONFIG);auth=firebase.auth();db=firebase.firestore();storage=firebase.storage();}catch(e){}
+
+function showToast(msg,dur=2500){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('show')}
+
+function setStatus(s){
+  document.querySelectorAll('.status-btn').forEach(b=>b.className='status-btn');
+  if(s==='online'){document.getElementById('status-online').classList.add('active-online');}
+  else{document.getElementById('status-dnd').classList.add('active-dnd');}
+  if(db&&currentUser){db.collection('users').doc(currentUser.uid).update({status:s}).catch(()=>{});}
+  showToast(s==='online'?'✅ أنت متاح الآن':'🔴 وضع مشغول');
+}
+
+function copyNum(){
+  const n=document.getElementById('fi-pnum').textContent;
+  navigator.clipboard?.writeText(n).catch(()=>{});
+  showToast('📋 تم نسخ الرقم');
+}
+
+function changeCover(){document.getElementById('cover-input').click()}
+function loadCover(input){
+  if(!input.files[0])return;
+  const r=new FileReader();
+  r.onload=e=>{document.getElementById('cover-display').style.background=`url(${e.target.result}) center/cover`;};
+  r.readAsDataURL(input.files[0]);
+}
+
+function previewPhoto(input){
+  if(!input.files[0])return;
+  photoFile=input.files[0];
+  const r=new FileReader();
+  r.onload=e=>{
+    document.getElementById('photo-preview').innerHTML=`<img src="${e.target.result}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+    document.getElementById('main-avatar').innerHTML=`<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+  };
+  r.readAsDataURL(input.files[0]);
+}
+
+async function saveProfile(){
+  const name=document.getElementById('edit-name').value.trim();
+  if(name.split(' ').filter(w=>w).length<3){showToast('⚠️ الاسم لازم يكون ثلاثي');return;}
+  const btn=document.querySelector('.form-btn');
+  btn.textContent='جاري الحفظ...';btn.disabled=true;
+  try{
+    let photoURL=userData?.photoURL||null;
+    if(photoFile&&storage&&currentUser){
+      const ref=storage.ref(`avatars/${currentUser.uid}`);
+      await ref.put(photoFile);
+      photoURL=await ref.getDownloadURL();
+    }
+    const updates={
+      fullName:name,
+      nickname:document.getElementById('edit-nickname').value.trim()||null,
+      bio:document.getElementById('edit-bio').value.trim()||null,
+      photoURL,
+    };
+    if(db&&currentUser)await db.collection('users').doc(currentUser.uid).update(updates);
+    userData={...userData,...updates};
+    renderProfile();
+    document.getElementById('edit-modal').classList.remove('show');
+    showToast('✅ تم حفظ التعديلات');
+  }catch(e){showToast('حصل خطأ، حاول تاني');}
+  btn.textContent='💾 حفظ التعديلات';btn.disabled=false;
+}
+
+async function changePlatformNum(){
+  // check cooldown
+  if(pnumLastChanged){
+    const months2=60*24*60*60*1000;
+    if(Date.now()-pnumLastChanged<months2){
+      const days=Math.ceil((months2-(Date.now()-pnumLastChanged))/(24*60*60*1000));
+      showToast(`⏳ ممكن تغير الرقم بعد ${days} يوم`);return;
+    }
+  }
+  const n=prompt('أدخل رقم التواصل الجديد (يبدأ بـ 019 وطوله 11 رقم):');
+  if(!n)return;
+  if(!n.startsWith('019')||n.length!==11){showToast('❌ الرقم لازم يبدأ بـ 019 وطوله 11 رقم');return;}
+  if(!db)return;
+  const ex=await db.collection('users').where('platformNum','==',n).get();
+  if(!ex.empty&&ex.docs[0].id!==currentUser?.uid){showToast('❌ الرقم ده متاخد بالفعل');return;}
+  await db.collection('users').doc(currentUser.uid).update({platformNum:n,pnumLastChanged:firebase.firestore.FieldValue.serverTimestamp()});
+  pnumLastChanged=Date.now();
+  userData.platformNum=n;
+  document.getElementById('fi-pnum').textContent=n;
+  document.getElementById('display-num').textContent='#رقم التواصل: '+n;
+  showToast('✅ تم تغيير رقم التواصل');
+}
+
+function renderProfile(){
+  if(!userData)return;
+  const name=userData.fullName||'—';
+  const nick=userData.nickname||name;
+  document.getElementById('display-name').textContent=nick;
+  document.getElementById('fi-name').textContent=name;
+  document.getElementById('display-bio').textContent=userData.bio||'طالب في السنة الثالثة — يستعد للقمة 🎯';
+  document.getElementById('fi-grade').textContent=`${userData.gradeLabel||''} ${userData.branch||''}`;
+  document.getElementById('fi-pnum').textContent=userData.platformNum||'—';
+  document.getElementById('display-num').textContent='#رقم التواصل: '+(userData.platformNum||'—');
+  document.getElementById('fi-nickname').textContent=userData.nickname||'—';
+  document.getElementById('fi-email').textContent=currentUser?.email||'—';
+  document.getElementById('edit-name').value=name;
+  document.getElementById('edit-email').value=currentUser?.email||'';
+  document.getElementById('edit-phone').value=userData.phone||'';
+  document.getElementById('edit-nickname').value=userData.nickname||'';
+  document.getElementById('edit-bio').value=userData.bio||'';
+  if(userData.photoURL){
+    document.getElementById('main-avatar').innerHTML=`<img src="${userData.photoURL}" style="width:100%;height:100%;object-fit:cover">`;
+    document.getElementById('photo-preview').innerHTML=`<img src="${userData.photoURL}" style="width:52px;height:52px;border-radius:50%;object-fit:cover">`;
+  } else {
+    const initial=(name||'م').charAt(0);
+    document.getElementById('main-avatar').textContent=initial;
+    document.getElementById('photo-preview').textContent=initial;
+  }
+  if(userData.pnumLastChanged?.toDate)pnumLastChanged=userData.pnumLastChanged.toDate().getTime();
+  // grade tags
+  const grade=userData.gradeLabel||'';const branch=userData.branch||'';
+  const isAzhar=userData.grade?.includes('z');
+  document.getElementById('display-tags').innerHTML=`
+    <span class="ptag blue">${grade}</span>
+    ${isAzhar?'<span class="ptag teal">أزهري</span>':'<span class="ptag blue">ثانوي عام</span>'}
+    <span class="ptag gold">${branch}</span>`;
+}
+
+function showInstall(){document.getElementById('install-popup').classList.add('show')}
+
+async function doLogout(){
+  if(!confirm('هتسجل خروج؟'))return;
+  if(auth)await auth.signOut();
+  location.href='index.html';
+}
+
+window.addEventListener('load',()=>{
+  if(auth){
+    auth.onAuthStateChanged(async user=>{
+      if(!user){location.href='index.html';return;}
+      currentUser=user;
+      if(db){
+        try{
+          const doc=await db.collection('users').doc(user.uid).get();
+          if(doc.exists){userData=doc.data();renderProfile();}
+          else{location.href='register.html';}
+          // load stats
+          const msgs=await db.collection('chats').doc('group').collection('messages').where('uid','==',user.uid).get();
+          document.getElementById('stat-msgs').textContent=msgs.size;
+        }catch(e){}
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>

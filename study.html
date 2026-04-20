@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#06080f">
+<title>الدراسة — لمة الثانوية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06080f;--bg2:#0a0e1a;--bg3:#0f1525;--card:#111827;--card2:#1a2240;--card3:#1e2a4a;
+  --blue:#3b82f6;--blue2:#60a5fa;--teal:#14b8a6;--teal2:#2dd4bf;
+  --purple:#8b5cf6;--purple2:#a78bfa;--gold:#f59e0b;--gold2:#fbbf24;
+  --green:#22c55e;--red:#ef4444;--rose:#f43f5e;--indigo:#6366f1;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--text4:#475569;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --r:12px;--r2:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 20%,rgba(139,92,246,0.07) 0%,transparent 50%),radial-gradient(ellipse at 85% 80%,rgba(20,184,166,0.06) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(6,8,15,0.92);backdrop-filter:blur(16px);border-bottom:0.5px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{font-family:'Cairo',sans-serif;font-size:16px;font-weight:700}
+.icon-btn{width:36px;height:36px;border-radius:10px;background:var(--card);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;flex-shrink:0}
+.icon-btn:hover{background:var(--card2)}
+.icon-btn svg{width:18px;height:18px;stroke:var(--text2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+.section{padding:0 14px;margin-bottom:20px;position:relative;z-index:1}
+.sec-title{font-size:11px;color:var(--text3);letter-spacing:1.2px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.sec-title::after{content:'';flex:1;height:0.5px;background:var(--border)}
+
+/* ── Leaderboard top 3 ── */
+.lb-podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin-bottom:16px;padding:0 8px}
+.lb-pod{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.lb-av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Cairo',sans-serif;color:#fff;position:relative}
+.lb-rank-badge{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);background:var(--card3);border:0.5px solid var(--border2);border-radius:6px;font-size:9px;padding:1px 5px;white-space:nowrap}
+.lb-pname{font-size:11px;font-weight:600;text-align:center;margin-top:8px}
+.lb-ptime{font-size:10px;color:var(--text3);text-align:center}
+.lb-plat{height:40px;border-radius:6px 6px 0 0;display:flex;align-items:center;justify-content:center;width:100%;font-size:16px;margin-top:4px}
+.lb-pod.first .lb-plat{background:linear-gradient(180deg,rgba(245,158,11,0.3),rgba(245,158,11,0.1));height:56px}
+.lb-pod.second .lb-plat{background:linear-gradient(180deg,rgba(148,163,184,0.2),rgba(148,163,184,0.05))}
+.lb-pod.third .lb-plat{background:linear-gradient(180deg,rgba(205,127,50,0.2),rgba(205,127,50,0.05))}
+
+.lb-list{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);overflow:hidden;margin-bottom:8px}
+.lb-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--border)}
+.lb-item:last-child{border-bottom:none}
+.lb-pos{width:20px;font-size:12px;font-weight:700;color:var(--text3);text-align:center;flex-shrink:0}
+.lb-av-sm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;cursor:pointer}
+.lb-info{flex:1}
+.lb-name{font-size:13px;font-weight:600}
+.lb-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.lb-time-badge{font-size:11px;font-weight:700;font-family:'Cairo',sans-serif;color:var(--teal2)}
+.show-all-btn{text-align:center;padding:10px;font-size:11px;color:var(--blue2);border-top:0.5px solid var(--border);cursor:pointer}
+
+/* ── Pomodoro ── */
+.pomo-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:20px;margin-bottom:12px}
+.pomo-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.pomo-title{font-size:15px;font-weight:700;font-family:'Cairo',sans-serif}
+.pomo-mode-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:8px;padding:3px}
+.pomo-tab{padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:all 0.2s;color:var(--text3)}
+.pomo-tab.active{background:var(--card2);color:var(--blue2);font-weight:600}
+
+.pomo-ring-wrap{position:relative;width:160px;height:160px;margin:0 auto 16px}
+.pomo-ring{transform:rotate(-90deg)}
+.pomo-ring-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:8}
+.pomo-ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s linear;stroke-dasharray:408;stroke-dashoffset:0}
+.pomo-ring-fill.work{stroke:url(#pomGradWork)}
+.pomo-ring-fill.short{stroke:url(#pomGradShort)}
+.pomo-ring-fill.long{stroke:url(#pomGradLong)}
+.pomo-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pomo-time{font-family:'Cairo',sans-serif;font-size:34px;font-weight:700;line-height:1}
+.pomo-time.work{color:var(--blue2)}
+.pomo-time.short{color:var(--green)}
+.pomo-time.long{color:var(--purple2)}
+.pomo-label{font-size:10px;color:var(--text3);margin-top:2px}
+.pomo-stars{display:flex;gap:4px;justify-content:center;margin-bottom:12px}
+.pomo-star{font-size:16px;transition:all 0.3s}
+.pomo-star.active{animation:starPop 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes starPop{0%{transform:scale(0)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.pomo-controls{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
+.pomo-btn{width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:16px}
+.pomo-btn:hover{transform:scale(1.08)}
+.pomo-btn.main{width:64px;height:64px;background:linear-gradient(135deg,var(--blue),var(--teal));box-shadow:0 4px 16px rgba(59,130,246,0.35);font-size:22px}
+.pomo-btn.main.running{background:linear-gradient(135deg,var(--rose),#f97316)}
+.pomo-btn.secondary{background:var(--card2);border:0.5px solid var(--border2)}
+.pomo-sessions{text-align:center;font-size:11px;color:var(--text3)}
+
+/* ── Tracker ── */
+.tracker-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:16px;margin-bottom:12px}
+.tracker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.tracker-title{font-size:14px;font-weight:700;font-family:'Cairo',sans-serif}
+.tracker-streak{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--gold2);font-weight:600}
+.weeks-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px}
+.week-label{font-size:8px;color:var(--text4);text-align:center;padding-bottom:4px}
+.day-dot{width:100%;aspect-ratio:1;border-radius:4px;cursor:pointer;transition:all 0.2s;border:0.5px solid var(--border)}
+.day-dot.empty{background:rgba(255,255,255,0.04)}
+.day-dot.light{background:rgba(59,130,246,0.2);border-color:rgba(59,130,246,0.3)}
+.day-dot.medium{background:rgba(59,130,246,0.45);border-color:rgba(59,130,246,0.5)}
+.day-dot.full{background:var(--blue);border-color:var(--blue2)}
+.day-dot.today{box-shadow:0 0 0 2px var(--blue2)}
+.tracker-add{display:flex;gap:8px;margin-top:10px}
+.tracker-input{flex:1;background:var(--card2);border:0.5px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none}
+.tracker-input::placeholder{color:var(--text4)}
+.tracker-add-btn{padding:8px 14px;border-radius:8px;background:var(--blue);color:#fff;border:none;font-family:'Tajawal',sans-serif;font-size:12px;cursor:pointer;flex-shrink:0}
+
+/* ── Goal of day ── */
+.goal-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:16px;margin-bottom:12px}
+.goal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.goal-title{font-size:14px;font-weight:700;font-family:'Cairo',sans-serif}
+.goal-date{font-size:11px;color:var(--text3)}
+.goal-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.goal-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card2);border-radius:10px;border:0.5px solid var(--border);cursor:pointer;transition:all 0.2s}
+.goal-item.done{opacity:0.6}
+.goal-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s}
+.goal-item.done .goal-check{background:var(--green);border-color:var(--green)}
+.goal-text{font-size:13px;flex:1}
+.goal-item.done .goal-text{text-decoration:line-through;color:var(--text3)}
+.goal-delete{font-size:12px;color:var(--text4);padding:2px 4px}
+.goal-add-row{display:flex;gap:8px}
+.goal-add-input{flex:1;background:var(--card2);border:0.5px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none}
+.goal-add-input::placeholder{color:var(--text4)}
+.goal-add-btn{padding:8px 14px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;font-family:'Tajawal',sans-serif;font-size:12px;cursor:pointer;flex-shrink:0}
+
+/* ── Wheel ── */
+.wheel-card{background:var(--card);border-radius:var(--r2);border:0.5px solid var(--border);padding:20px;text-align:center;margin-bottom:12px}
+.wheel-title{font-size:15px;font-weight:700;font-family:'Cairo',sans-serif;margin-bottom:4px}
+.wheel-sub{font-size:11px;color:var(--text3);margin-bottom:16px}
+.wheel-wrap{position:relative;width:220px;height:220px;margin:0 auto 16px}
+#wheel-canvas{border-radius:50%;cursor:pointer}
+.wheel-arrow{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:24px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))}
+.wheel-spin-btn{padding:10px 28px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--blue));border:none;color:#fff;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(139,92,246,0.3);transition:all 0.2s}
+.wheel-spin-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(139,92,246,0.4)}
+.wheel-spin-btn:disabled{opacity:0.6;cursor:not-allowed}
+.wheel-result{margin-top:12px;font-size:14px;font-weight:600;color:var(--gold2);min-height:22px}
+
+/* ── Disaster counter ── */
+.disaster-card{background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(245,158,11,0.05));border:0.5px solid rgba(239,68,68,0.2);border-radius:var(--r2);padding:16px;margin-bottom:12px;text-align:center}
+.dc-emoji{font-size:32px;margin-bottom:8px}
+.dc-title{font-size:14px;font-weight:700;color:var(--red);margin-bottom:4px}
+.dc-num{font-family:'Cairo',sans-serif;font-size:36px;font-weight:900;color:var(--red);line-height:1;margin-bottom:4px}
+.dc-sub{font-size:11px;color:var(--text3)}
+
+/* ── Memes ── */
+.meme-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.meme-card{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:14px;text-align:center;cursor:pointer;transition:border-color 0.2s}
+.meme-card:hover{border-color:var(--border2)}
+.meme-emoji{font-size:28px;margin-bottom:6px}
+.meme-text{font-size:11px;color:var(--text2);line-height:1.4}
+
+/* bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,26,0.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:0.5px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all 0.2s;text-decoration:none}
+.nav-item svg{width:22px;height:22px;stroke:var(--text4);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.2s}
+.nav-item.active svg{stroke:var(--blue2)}
+.nav-label{font-size:9px;color:var(--text4);transition:color 0.2s}
+.nav-item.active .nav-label{color:var(--blue2)}
+
+#toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card3);border:0.5px solid var(--border2);border-radius:12px;padding:10px 18px;font-size:13px;color:var(--text);opacity:0;transition:all 0.3s;z-index:500;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,0.4);pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<div class="topbar">
+  <div class="topbar-title">📚 الدراسة</div>
+  <div style="font-size:11px;color:var(--text3)" id="study-date"></div>
+</div>
+
+<main style="padding-top:8px">
+
+<!-- Leaderboard -->
+<div class="section">
+  <div class="sec-title">🏆 أكثر الطلاب مذاكرةً اليوم</div>
+  <div class="lb-podium">
+    <div class="lb-pod second">
+      <div class="lb-av" style="width:52px;height:52px;font-size:20px;background:#0f766e">أ
+        <div class="lb-rank-badge">🥈 2</div>
+      </div>
+      <div class="lb-pname">أحمد علي</div>
+      <div class="lb-ptime">3.5 ساعة</div>
+      <div class="lb-plat">🥈</div>
+    </div>
+    <div class="lb-pod first">
+      <div class="lb-av" style="width:64px;height:64px;font-size:24px;background:#1d4ed8;border:2px solid var(--gold2)">م
+        <div class="lb-rank-badge" style="background:rgba(245,158,11,0.2);color:var(--gold2)">🥇 1</div>
+      </div>
+      <div class="lb-pname" style="color:var(--gold2);font-weight:700">محمد أحمد</div>
+      <div class="lb-ptime" style="color:var(--gold2)">5.2 ساعة</div>
+      <div class="lb-plat">🥇</div>
+    </div>
+    <div class="lb-pod third">
+      <div class="lb-av" style="width:44px;height:44px;font-size:17px;background:#7c3aed">ي
+        <div class="lb-rank-badge">🥉 3</div>
+      </div>
+      <div class="lb-pname">يوسف</div>
+      <div class="lb-ptime">2.8 ساعة</div>
+      <div class="lb-plat">🥉</div>
+    </div>
+  </div>
+  <div class="lb-list">
+    <div class="lb-item">
+      <div class="lb-pos">4</div>
+      <div class="lb-av-sm" style="background:#b45309">س</div>
+      <div class="lb-info"><div class="lb-name">سارة محمد</div><div class="lb-sub">3 ثانوي أدبي</div></div>
+      <div class="lb-time-badge">2.1 س</div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-pos">5</div>
+      <div class="lb-av-sm" style="background:#0891b2">ن</div>
+      <div class="lb-info"><div class="lb-name">نور خالد</div><div class="lb-sub">3 أزهر علمي</div></div>
+      <div class="lb-time-badge">1.9 س</div>
+    </div>
+  </div>
+  <div class="show-all-btn" onclick="showToast('جاري تحميل العشرة الأوائل...')">عرض العشرة الأوائل ←</div>
+</div>
+
+<!-- Pomodoro -->
+<div class="section">
+  <div class="sec-title">⏱ مؤقت المذاكرة</div>
+  <div class="pomo-card">
+    <div class="pomo-header">
+      <div class="pomo-title">Pomodoro 🍅</div>
+      <div class="pomo-mode-tabs">
+        <div class="pomo-tab active" onclick="setPomoMode('work',this)">مذاكرة</div>
+        <div class="pomo-tab" onclick="setPomoMode('short',this)">راحة قصيرة</div>
+        <div class="pomo-tab" onclick="setPomoMode('long',this)">راحة طويلة</div>
+      </div>
+    </div>
+    <div class="pomo-ring-wrap">
+      <svg class="pomo-ring" width="160" height="160" viewBox="0 0 160 160">
+        <defs>
+          <linearGradient id="pomGradWork" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#3b82f6"/>
+            <stop offset="100%" style="stop-color:#2dd4bf"/>
+          </linearGradient>
+          <linearGradient id="pomGradShort" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#22c55e"/>
+            <stop offset="100%" style="stop-color:#86efac"/>
+          </linearGradient>
+          <linearGradient id="pomGradLong" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#8b5cf6"/>
+            <stop offset="100%" style="stop-color:#a78bfa"/>
+          </linearGradient>
+        </defs>
+        <circle class="pomo-ring-bg" cx="80" cy="80" r="65"/>
+        <circle class="pomo-ring-fill work" id="pomo-ring-fill" cx="80" cy="80" r="65"/>
+      </svg>
+      <div class="pomo-center">
+        <div class="pomo-time work" id="pomo-display">25:00</div>
+        <div class="pomo-label" id="pomo-label">وقت المذاكرة</div>
+      </div>
+    </div>
+    <div class="pomo-stars" id="pomo-stars">
+      <div class="pomo-star">⭐</div>
+      <div class="pomo-star">⭐</div>
+      <div class="pomo-star">⭐</div>
+      <div class="pomo-star">⭐</div>
+    </div>
+    <div class="pomo-controls">
+      <button class="pomo-btn secondary" onclick="resetPomo()" title="إعادة">↺</button>
+      <button class="pomo-btn main" id="pomo-main-btn" onclick="togglePomo()">▶</button>
+      <button class="pomo-btn secondary" onclick="skipPomo()" title="تخطي">⏭</button>
+    </div>
+    <div class="pomo-sessions" id="pomo-sessions">جلسة 1 من 4 🍅</div>
+  </div>
+</div>
+
+<!-- Tracker -->
+<div class="section">
+  <div class="sec-title">📊 تراكر المذاكرة</div>
+  <div class="tracker-card">
+    <div class="tracker-header">
+      <div class="tracker-title">سجّل أيام مذاكرتك</div>
+      <div class="tracker-streak">🔥 <span id="streak-count">7</span> أيام متتالية</div>
+    </div>
+    <div class="weeks-grid" id="tracker-grid"></div>
+    <div class="tracker-add">
+      <input class="tracker-input" id="tracker-note" placeholder="ذاكرت إيه النهارده؟ (اختياري)" maxlength="60">
+      <button class="tracker-add-btn" onclick="addTrackerDay()">✓ سجّل اليوم</button>
+    </div>
+  </div>
+</div>
+
+<!-- Goal of day -->
+<div class="section">
+  <div class="sec-title">🎯 هدف اليوم</div>
+  <div class="goal-card">
+    <div class="goal-header">
+      <div class="goal-title">أهدافك النهارده</div>
+      <div class="goal-date" id="goal-date"></div>
+    </div>
+    <div class="goal-list" id="goal-list"></div>
+    <div class="goal-add-row">
+      <input class="goal-add-input" id="goal-input" placeholder="أضف هدف..." maxlength="60" onkeydown="if(event.key==='Enter')addGoal()">
+      <button class="goal-add-btn" onclick="addGoal()">+ أضف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Wheel of luck -->
+<div class="section">
+  <div class="sec-title">🎰 عجلة الحظ 😂</div>
+  <div class="wheel-card">
+    <div class="wheel-title">مش عارف تذاكر إيه؟</div>
+    <div class="wheel-sub">دوّر العجلة وهي اللي تقررلك 😂</div>
+    <div class="wheel-wrap">
+      <canvas id="wheel-canvas" width="220" height="220"></canvas>
+      <div class="wheel-arrow">▼</div>
+    </div>
+    <button class="wheel-spin-btn" id="wheel-btn" onclick="spinWheel()">🎰 دوّر!</button>
+    <div class="wheel-result" id="wheel-result"></div>
+  </div>
+</div>
+
+<!-- Disaster counter -->
+<div class="section">
+  <div class="sec-title">😱 عداد الكارثة</div>
+  <div class="disaster-card">
+    <div class="dc-emoji">😱</div>
+    <div class="dc-title">لو رسبت ومش هتدخل جامعة!</div>
+    <div class="dc-num" id="disaster-days">—</div>
+    <div class="dc-sub">يوم من دلوقتي لأول مرة تقدر تلتحق بكلية أخرى 😅</div>
+  </div>
+</div>
+
+<!-- Memes -->
+<div class="section">
+  <div class="sec-title">😂 ميمز الثانوية</div>
+  <div class="meme-grid">
+    <div class="meme-card"><div class="meme-emoji">😴</div><div class="meme-text">أنا وأنا بذاكر الساعة 2 الصبح</div></div>
+    <div class="meme-card"><div class="meme-emoji">📱</div><div class="meme-text">فتحت المذكرة وفجأة لقيت نفسي في يوتيوب</div></div>
+    <div class="meme-card"><div class="meme-emoji">🤓</div><div class="meme-text">المذاكرة خلصت؟ أيوه 5 دقائق قبل الامتحان 😂</div></div>
+    <div class="meme-card"><div class="meme-emoji">🎯</div><div class="meme-text">هذاكر من بكره — كل يوم من 3 سنين</div></div>
+  </div>
+</div>
+
+</main>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <a class="nav-item" href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    <span class="nav-label">الرئيسية</span>
+  </a>
+  <a class="nav-item" href="schedule.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span class="nav-label">الجداول</span>
+  </a>
+  <a class="nav-item" href="chat.html">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <span class="nav-label">المحادثات</span>
+  </a>
+  <a class="nav-item active" href="study.html">
+    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="nav-label">الدراسة</span>
+  </a>
+  <a class="nav-item" href="profile.html">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span class="nav-label">بروفايلي</span>
+  </a>
+</nav>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script>
+const FIREBASE_CONFIG={apiKey:"AIzaSyDZYPoS67TFo__Bb7ysANV97hRMXCGH8pw",authDomain:"thanaweya-2026.firebaseapp.com",projectId:"thanaweya-2026",storageBucket:"thanaweya-2026.firebasestorage.app",messagingSenderId:"598643977703",appId:"1:598643977703:web:3fbe9c9fbf40574b0fe142"};
+let db,auth,currentUser=null,userData=null;
+try{firebase.initializeApp(FIREBASE_CONFIG);auth=firebase.auth();db=firebase.firestore();}catch(e){}
+
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+
+// ── DATE ──
+const now=new Date();
+const todayStr=now.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
+document.getElementById('study-date').textContent=todayStr;
+document.getElementById('goal-date').textContent=todayStr;
+
+// ── DISASTER ──
+const RETAKE=new Date('2027-10-01');
+document.getElementById('disaster-days').textContent=Math.max(0,Math.ceil((RETAKE-now)/86400000));
+
+// ══════════════════
+// POMODORO
+// ══════════════════
+const POMO_MODES={
+  work:{label:'وقت المذاكرة',mins:25,class:'work'},
+  short:{label:'راحة قصيرة',mins:5,class:'short'},
+  long:{label:'راحة طويلة',mins:15,class:'long'},
+};
+let pomoMode='work',pomoSecs=25*60,pomoRunning=false,pomoTimer=null,pomoSession=1,pomoDone=0;
+const CIRCUMFERENCE=2*Math.PI*65;
+
+function setPomoMode(m,btn){
+  clearInterval(pomoTimer);pomoRunning=false;
+  document.querySelectorAll('.pomo-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  pomoMode=m;
+  const cfg=POMO_MODES[m];
+  pomoSecs=cfg.mins*60;
+  updatePomoDisplay();
+  document.getElementById('pomo-main-btn').className='pomo-btn main';
+  document.getElementById('pomo-main-btn').textContent='▶';
+  document.getElementById('pomo-label').textContent=cfg.label;
+  const fill=document.getElementById('pomo-ring-fill');
+  fill.className='pomo-ring-fill '+cfg.class;
+  fill.style.strokeDashoffset=0;
+}
+function updatePomoDisplay(){
+  const m=Math.floor(pomoSecs/60).toString().padStart(2,'0');
+  const s=(pomoSecs%60).toString().padStart(2,'0');
+  document.getElementById('pomo-display').textContent=`${m}:${s}`;
+  const cfg=POMO_MODES[pomoMode];
+  const total=cfg.mins*60;
+  const frac=pomoSecs/total;
+  document.getElementById('pomo-ring-fill').style.strokeDashoffset=(1-frac)*CIRCUMFERENCE;
+}
+function togglePomo(){
+  if(pomoRunning){
+    clearInterval(pomoTimer);pomoRunning=false;
+    document.getElementById('pomo-main-btn').className='pomo-btn main';
+    document.getElementById('pomo-main-btn').textContent='▶';
+  } else {
+    pomoRunning=true;
+    document.getElementById('pomo-main-btn').className='pomo-btn main running';
+    document.getElementById('pomo-main-btn').textContent='⏸';
+    pomoTimer=setInterval(()=>{
+      if(pomoSecs<=0){
+        clearInterval(pomoTimer);pomoRunning=false;
+        pomoDone++;
+        if(pomoMode==='work')saveStudyTime(POMO_MODES.work.mins);
+        showToast(pomoMode==='work'?'🎉 انتهت جلسة المذاكرة! خذ راحة':'✅ انتهت الراحة! يلا نذاكر 💪');
+        activateStar(pomoDone);
+        return;
+      }
+      pomoSecs--;
+      updatePomoDisplay();
+    },1000);
+  }
+}
+function resetPomo(){
+  clearInterval(pomoTimer);pomoRunning=false;
+  pomoSecs=POMO_MODES[pomoMode].mins*60;
+  updatePomoDisplay();
+  document.getElementById('pomo-main-btn').className='pomo-btn main';
+  document.getElementById('pomo-main-btn').textContent='▶';
+}
+function skipPomo(){resetPomo();}
+function activateStar(n){
+  const stars=document.querySelectorAll('.pomo-star');
+  const i=(n-1)%stars.length;
+  stars[i].classList.add('active');
+  setTimeout(()=>stars[i].classList.remove('active'),600);
+}
+function saveStudyTime(mins){
+  if(!db||!currentUser)return;
+  const today=new Date().toISOString().split('T')[0];
+  db.collection('study').doc(currentUser.uid).collection('sessions').add({date:today,mins,ts:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});
+}
+
+// ══════════════════
+// TRACKER
+// ══════════════════
+let trackerData=JSON.parse(localStorage.getItem('tracker')||'{}');
+function renderTracker(){
+  const grid=document.getElementById('tracker-grid');
+  const days=['ح','ن','ث','ر','خ','ج','س'];
+  let html=days.map(d=>`<div class="week-label">${d}</div>`).join('');
+  const today=new Date();
+  for(let i=27;i>=0;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const key=d.toISOString().split('T')[0];
+    const isToday=i===0;
+    const val=trackerData[key];
+    const cls=val==='full'?'full':val==='medium'?'medium':val==='light'?'light':'empty';
+    html+=`<div class="day-dot ${cls}${isToday?' today':''}" title="${key}" onclick="cycleDay('${key}',this)"></div>`;
+  }
+  grid.innerHTML=html;
+}
+function cycleDay(key,el){
+  const order=['empty','light','medium','full'];
+  const cur=trackerData[key]||'empty';
+  const next=order[(order.indexOf(cur)+1)%order.length];
+  if(next==='empty')delete trackerData[key];else trackerData[key]=next;
+  localStorage.setItem('tracker',JSON.stringify(trackerData));
+  el.className='day-dot '+next+(el.className.includes('today')?' today':'');
+}
+function addTrackerDay(){
+  const today=new Date().toISOString().split('T')[0];
+  trackerData[today]='full';
+  localStorage.setItem('tracker',JSON.stringify(trackerData));
+  renderTracker();
+  const note=document.getElementById('tracker-note').value.trim();
+  if(note&&db&&currentUser){
+    db.collection('study').doc(currentUser.uid).collection('tracker').doc(today).set({note,ts:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});
+  }
+  document.getElementById('tracker-note').value='';
+  showToast('✅ تم تسجيل يوم المذاكرة 🔥');
+}
+
+// ══════════════════
+// GOALS
+// ══════════════════
+let goals=JSON.parse(localStorage.getItem('goals-today')||'[]');
+function renderGoals(){
+  const today=new Date().toISOString().split('T')[0];
+  const stored=JSON.parse(localStorage.getItem('goals-'+today)||'[]');
+  goals=stored;
+  const list=document.getElementById('goal-list');
+  if(!goals.length){list.innerHTML='<div style="text-align:center;padding:16px;font-size:12px;color:var(--text4)">لسه ما حطتش أهداف النهارده! 🎯</div>';return;}
+  list.innerHTML=goals.map((g,i)=>`
+    <div class="goal-item${g.done?' done':''}" onclick="toggleGoal(${i})">
+      <div class="goal-check">${g.done?'✓':''}</div>
+      <div class="goal-text">${g.text}</div>
+      <div class="goal-delete" onclick="event.stopPropagation();deleteGoal(${i})">✕</div>
+    </div>`).join('');
+}
+function addGoal(){
+  const input=document.getElementById('goal-input');
+  const text=input.value.trim();
+  if(!text)return;
+  const today=new Date().toISOString().split('T')[0];
+  const stored=JSON.parse(localStorage.getItem('goals-'+today)||'[]');
+  stored.push({text,done:false});
+  localStorage.setItem('goals-'+today,JSON.stringify(stored));
+  input.value='';
+  renderGoals();
+}
+function toggleGoal(i){
+  const today=new Date().toISOString().split('T')[0];
+  const stored=JSON.parse(localStorage.getItem('goals-'+today)||'[]');
+  stored[i].done=!stored[i].done;
+  localStorage.setItem('goals-'+today,JSON.stringify(stored));
+  renderGoals();
+  if(stored[i].done)showToast('✅ أحسنت! هدف اتخلص 🎉');
+}
+function deleteGoal(i){
+  const today=new Date().toISOString().split('T')[0];
+  const stored=JSON.parse(localStorage.getItem('goals-'+today)||'[]');
+  stored.splice(i,1);
+  localStorage.setItem('goals-'+today,JSON.stringify(stored));
+  renderGoals();
+}
+
+// ══════════════════
+// WHEEL
+// ══════════════════
+const WHEEL_ITEMS=['كيمياء 🧪','فيزياء ⚡','رياضيات 📐','أحياء 🔬','عربي 📖','إنجليزي 🌍','تاريخ 🏛','جغرافيا 🗺','نحو 📝','فقه 📿','تفسير 📖','استراحة 😴'];
+const WHEEL_COLORS=['#1d4ed8','#0f766e','#7c3aed','#166534','#92400e','#1e40af','#9a3412','#065f46','#6b21a8','#854d0e','#1a3a4a','#374151'];
+let wheelSpinning=false,wheelAngle=0;
+function drawWheel(angle){
+  const c=document.getElementById('wheel-canvas');
+  const ctx=c.getContext('2d');
+  const cx=110,cy=110,r=105;
+  const slice=(2*Math.PI)/WHEEL_ITEMS.length;
+  ctx.clearRect(0,0,220,220);
+  WHEEL_ITEMS.forEach((item,i)=>{
+    const start=angle+i*slice;
+    const end=start+slice;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,end);ctx.closePath();
+    ctx.fillStyle=WHEEL_COLORS[i];ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=1;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(start+slice/2);
+    ctx.textAlign='right';ctx.fillStyle='#fff';
+    ctx.font='bold 10px Tajawal,sans-serif';ctx.fillText(item,r-8,4);
+    ctx.restore();
+  });
+  // center
+  ctx.beginPath();ctx.arc(cx,cy,16,0,2*Math.PI);
+  ctx.fillStyle='#0a0e1a';ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=2;ctx.stroke();
+}
+function spinWheel(){
+  if(wheelSpinning)return;
+  wheelSpinning=true;
+  document.getElementById('wheel-btn').disabled=true;
+  document.getElementById('wheel-result').textContent='';
+  const extraSpins=5+Math.random()*5;
+  const target=wheelAngle+extraSpins*2*Math.PI+Math.random()*2*Math.PI;
+  const duration=3000;const start=Date.now();const startAngle=wheelAngle;
+  function animate(){
+    const elapsed=Date.now()-start;
+    const t=Math.min(elapsed/duration,1);
+    const ease=1-Math.pow(1-t,4);
+    wheelAngle=startAngle+(target-startAngle)*ease;
+    drawWheel(wheelAngle);
+    if(t<1){requestAnimationFrame(animate);}
+    else{
+      wheelSpinning=false;
+      document.getElementById('wheel-btn').disabled=false;
+      const slice=(2*Math.PI)/WHEEL_ITEMS.length;
+      const norm=(((-wheelAngle%(2*Math.PI))+(2*Math.PI))%(2*Math.PI));
+      const idx=Math.floor(norm/slice)%WHEEL_ITEMS.length;
+      document.getElementById('wheel-result').textContent='📌 '+WHEEL_ITEMS[idx];
+      showToast('يلا اذاكر '+WHEEL_ITEMS[idx]+' 😂');
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+// ══════════════════
+// INIT
+// ══════════════════
+renderTracker();
+renderGoals();
+drawWheel(0);
+updatePomoDisplay();
+
+if(auth){
+  auth.onAuthStateChanged(async user=>{
+    if(!user){location.href='index.html';return;}
+    currentUser=user;
+    if(db){
+      try{
+        const doc=await db.collection('users').doc(user.uid).get();
+        if(doc.exists)userData=doc.data();
+      }catch(e){}
+    }
+  });
+}
+</script>
+</body>
+</html>

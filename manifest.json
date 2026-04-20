@@ -1,0 +1,40 @@
+{
+  "name": "ثانوية 2026 — عداد الامتحانات",
+  "short_name": "ثانوية 2026",
+  "description": "عداد امتحانات الثانوية العامة والأزهرية — تصميم محمد العوضي شاهين",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e1a",
+  "theme_color": "#0a0e1a",
+  "orientation": "portrait-primary",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["education", "utilities"],
+  "shortcuts": [
+    {
+      "name": "جدول الثانوية",
+      "url": "/?tab=schedule-th",
+      "description": "جدول امتحانات الثانوية العامة"
+    },
+    {
+      "name": "جدول الأزهرية",
+      "url": "/?tab=schedule-az",
+      "description": "جدول امتحانات الأزهرية"
+    }
+  ]
+}
