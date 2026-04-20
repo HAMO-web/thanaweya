@@ -187,7 +187,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       </button>
       <div class="or-divider"><div class="or-line"></div><div class="or-txt">أو بالبريد وكلمة السر</div><div class="or-line"></div></div>
       <div class="field">
-        <div class="field-label"><span>البريد الإلكتروني</span><span class="req-badge">إجباري ✱</span></div>
+        <div class="field-label"><span>البريد الإلكتروني</span><span class="req-badge">اختياري</span></div>
         <input class="field-input" id="reg-email" placeholder="example@gmail.com" type="email" autocomplete="email">
         <div class="err-msg" id="reg-email-err">أدخل بريد إلكتروني صحيح</div>
       </div>
@@ -353,25 +353,37 @@ async function signInGoogle(){
   try{const p=new firebase.auth.GoogleAuthProvider();await auth.signInWithPopup(p);}
   catch(e){showToast('فشل: '+e.message);}
 }
-
 async function doLogin(){
-  const eu=document.getElementById('login-email').value.trim();
-  const pass=document.getElementById('login-pass').value;
-  if(!eu||!pass){showErr('login-err','أدخل البريد وكلمة السر');return;}
-  const btn=document.getElementById('login-btn');
-  btn.disabled=true;btn.innerHTML='<span class="btn-loader"></span>جاري الدخول...';
-  try{
-    let email=eu;
-    if(!eu.includes('@')&&db){
-      const s=await db.collection('users').where('username','==',eu.toLowerCase()).limit(1).get();
-      if(!s.empty)email=s.docs[0].data().email;
-      else{showErr('login-err','اسم المستخدم غير موجود');btn.disabled=false;btn.textContent='تسجيل الدخول';return;}
+  let eu = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+
+  if(!eu || !pass){
+    showErr('login-err', 'أدخل اسم المستخدم وكلمة السر');
+    return;
+  }
+
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="btn-loader"></span>جاري الدخول...';
+
+  try {
+    let email = eu;
+    // لو الطالب كتب "يوزر نيم" (يعني مفيش علامة @)
+    // بنضيف له التكملة السرية اللي اتفقنا عليها عشان فايربيز يعرفه
+    if(!eu.includes('@')){
+      email = eu.toLowerCase() + "@thanaweya.app";
     }
-    await auth.signInWithEmailAndPassword(email,pass);
-    location.href='index.html';
-  }catch(e){
-    showErr('login-err','البريد أو كلمة السر غلط');
-    btn.disabled=false;btn.textContent='تسجيل الدخول';
+
+    // تسجيل الدخول مباشرة بالإيميل (سواء حقيقي أو وهمي)
+    await auth.signInWithEmailAndPassword(email, pass);
+    location.href = 'index.html';
+
+  } catch(e) {
+    let msg = 'الاسم أو كلمة السر غلط';
+    if(e.code === 'auth/user-not-found') msg = 'المستخدم غير موجود';
+    showErr('login-err', msg);
+    btn.disabled = false;
+    btn.textContent = 'تسجيل الدخول';
   }
 }
 
@@ -379,7 +391,7 @@ async function forgotPassword(){
   const email=document.getElementById('login-email').value.trim();
   if(!email||!email.includes('@')){showToast('أدخل بريدك الإلكتروني أولاً');return;}
   try{await auth.sendPasswordResetEmail(email);showToast('تم إرسال رابط إعادة التعيين ✓');}
-  catch(e){showToast('فشل إرسال البريد');}
+  catch(e){showToast(' فشل إرسال البريد يرجي عمل حساب جديد');}
 }
 
 function checkUsername(v){
@@ -423,28 +435,35 @@ function updateBar(cur){
 }
 
 async function goS2(){
-  const email=document.getElementById('reg-email').value.trim();
-  const user=document.getElementById('reg-username').value.trim();
-  const pass=document.getElementById('reg-pass').value;
-  const pass2=document.getElementById('reg-pass2').value;
-  if(!email||!email.includes('@')){showErr('reg-email-err','أدخل بريد إلكتروني صحيح');return;}
-  if(!user||!/^[a-zA-Z0-9_]{3,20}$/.test(user)){showToast('اسم المستخدم غير صحيح');return;}
-  if(pass.length<8){showErr('reg-pass-err','كلمة السر 8 أحرف على الأقل');return;}
-  if(pass!==pass2){showErr('reg-pass2-err','كلمتا السر غير متطابقتين');return;}
-  const btn=document.getElementById('s1-btn');
-  btn.disabled=true;btn.innerHTML='<span class="btn-loader"></span>جاري...';
-  try{
-    if(!currentUser&&auth){
-      const cred=await auth.createUserWithEmailAndPassword(email,pass);
-      currentUser=cred.user;
-    }
+  let email = document.getElementById('reg-email').value.trim();
+  const user = document.getElementById('reg-username').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+
+  if(!user || user.length < 3){ showToast('أدخل اسم مستخدم صحيح'); return; }
+  
+  // لو مسابش إيميل، بنعمله واحد مخفي باليوزر نيم بتاعه
+  if(!email) {
+    email = user.toLowerCase() + "@thanaweya.app";
+  }
+
+  if(pass.length < 8){ showToast('كلمة السر 8 أحرف على الأقل'); return; }
+  if(pass !== pass2){ showToast('كلمتا السر غير متطابقتين'); return; }
+
+  const btn = document.getElementById('s1-btn');
+  btn.disabled = true; btn.innerHTML = 'جاري...';
+
+  try {
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    currentUser = cred.user;
     goRegTo(2);
-  }catch(e){
-    let msg='حصل خطأ';
-    if(e.code==='auth/email-already-in-use')msg='البريد مسجل بالفعل';
-    else if(e.code==='auth/weak-password')msg='كلمة السر ضعيفة جداً';
+  } catch(e) {
+    let msg = 'حصل خطأ';
+    if(e.code === 'auth/email-already-in-use') msg = 'اسم المستخدم أو البريد مسجل بالفعل';
     showToast(msg);
-  }finally{btn.disabled=false;btn.textContent='التالي ←';}
+  } finally {
+    btn.disabled = false; btn.textContent = 'التالي ←';
+  }
 }
 
 function goS3(){
