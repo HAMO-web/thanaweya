@@ -539,42 +539,89 @@ function sendMsg(){
     }).catch(()=>{});
   }
 }
+function openChat(id) {
+    currentChat = id;
+    const isGroup = id === 'group';
+    
+    // إظهار وإخفاء الشاشات
+    document.getElementById('chat-list-view').style.display = 'none';
+    document.getElementById('chat-room-view').style.display = 'flex';
 
-function openChat(id){
-  currentChat=id;
-  const isGroup=id==='group';
-  document.getElementById('chat-list-view').style.display='none';
-  document.getElementById('chat-room-view').style.display='flex';
+    const area = document.getElementById('messages-area');
+    area.innerHTML = '<div class="date-divider">جاري تحميل الرسائل...</div>';
 
-  if(isGroup){
-    document.getElementById('rh-name').textContent='جروب لمة الثانوية';
-    document.getElementById('rh-avatar').textContent='💬';
-    document.getElementById('rh-stats').style.display='flex';
-    document.getElementById('pinned-msg').style.display='flex';
+    if (isGroup) {
+        document.getElementById('rh-name').textContent = 'جروب لمة الثانوية';
+        document.getElementById('rh-avatar').textContent = '💬';
+        document.getElementById('rh-stats').style.display = 'flex';
+        document.getElementById('pinned-msg').style.display = 'flex';
 
-    // --- السطور الجديدة عشان تجيب العدد الحقيقي ---
-    // 1. عدد كل الأعضاء
-    db.collection('users').get().then(snap => {
-       document.getElementById('rh-sub').textContent = snap.size + ' عضو';
-    });
+        // 1. جلب العدد الحقيقي للأعضاء
+        db.collection('users').get().then(snap => {
+            document.getElementById('rh-sub').textContent = snap.size + ' عضو';
+        });
 
-    // 2. عدد المتصلين (لو عندك عنصر الـ Stats)
-    db.collection('users').where('status', '==', 'online').onSnapshot(snap => {
-       // لو عندك سبان مخصص للمتصلين زي ما عدلنا قبل كدة
-       const onlineEl = document.getElementById('online-count');
-       if(onlineEl) onlineEl.textContent = snap.size;
-    });
-    // -------------------------------------------
+        // 2. جلب عدد المتصلين (Online)
+        db.collection('users').where('status', '==', 'online').onSnapshot(snap => {
+            const onlineEl = document.getElementById('online-count');
+            if (onlineEl) onlineEl.textContent = snap.size;
+        });
+    } else {
+        document.getElementById('rh-name').textContent = id;
+        document.getElementById('rh-sub').textContent = 'محادثة خاصة';
+        document.getElementById('rh-avatar').textContent = '👤';
+        document.getElementById('rh-stats').style.display = 'none';
+        document.getElementById('pinned-msg').style.display = 'none';
+    }
 
-  } else {
-    document.getElementById('rh-name').textContent=id;
-    document.getElementById('rh-sub').textContent='محادثة خاصة';
-    document.getElementById('rh-avatar').textContent='👤';
-    document.getElementById('rh-stats').style.display='none';
-    document.getElementById('pinned-msg').style.display='none';
-  }
-  // ... باقي الكود بتاعك
+    // جلب الرسائل من الداتا بيز
+    if (db && currentUser) {
+        const chatId = isGroup ? 'group' : `private_${[currentUser.uid, id].sort().join('_')}`;
+        
+        db.collection('chats').doc(chatId).collection('messages')
+            .orderBy('time', 'asc')
+            .limit(50)
+            .onSnapshot(snap => {
+                area.innerHTML = `<div class="date-divider">اليوم</div>`;
+                if (snap.empty) {
+                    area.innerHTML += '<div style="text-align:center;color:var(--text4);margin-top:20px;">لا توجد رسائل بعد..</div>';
+                }
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    const m = {
+                        id: doc.id,
+                        ...data,
+                        time: data.time?.toDate().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) || 'الآن'
+                    };
+                    const isMe = m.uid === currentUser.uid;
+                    const div = document.createElement('div');
+                    div.innerHTML = renderMsg(m, isMe);
+                    area.appendChild(div.firstElementChild);
+                });
+                area.scrollTop = area.scrollHeight;
+            });
+    }
 }
+
+// دالة الرجوع للقائمة
+function backToList() {
+    document.getElementById('chat-room-view').style.display = 'none';
+    document.getElementById('chat-list-view').style.display = 'flex';
+}
+
+// تحديث حالة الاتصال أول ما يفتح
+auth.onAuthStateChanged(async user => {
+    if (user && db) {
+        currentUser = user;
+        // تسجيل الدخول كـ online
+        db.collection('users').doc(user.uid).update({ status: 'online' }).catch(()=>{});
+        
+        try {
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (doc.exists) currentUserData = doc.data();
+        } catch (e) {}
+    }
+});
   }
   renderDemoMsgs();
   if(db&&currentUser){
